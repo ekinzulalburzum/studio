@@ -1,56 +1,29 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 120 22% 92%;
-    --foreground: 120 30% 10%;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 120 30% 10%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 120 30% 10%;
-    --primary: 120 50% 40%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 90 41% 85%;
-    --secondary-foreground: 120 50% 20%;
-    --muted: 120 10% 85%;
-    --muted-foreground: 120 10% 40%;
-    --accent: 90 41% 60%;
-    --accent-foreground: 120 50% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 120 20% 85%;
-    --input: 120 20% 85%;
-    --ring: 120 50% 40%;
-    --radius: 1rem;
-    --chart-1: 120 50% 40%;
-    --chart-2: 90 41% 60%;
-    --chart-3: 60 41% 60%;
-    --chart-4: 150 41% 60%;
-    --chart-5: 180 41% 60%;
-  }
-  .dark {
-    --background: 120 30% 5%;
-    --foreground: 0 0% 98%;
-    --card: 120 30% 8%;
-    --card-foreground: 0 0% 98%;
-    --popover: 120 30% 8%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 120 50% 50%;
-    --primary-foreground: 120 30% 5%;
-    --secondary: 120 30% 15%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 120 30% 15%;
-    --muted-foreground: 120 10% 65%;
-    --accent: 90 41% 50%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 120 30% 15%;
-    --input: 120 30% 15%;
-    --ring: 120 50% 50%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 355 100% 100%;
+    --secondary: 142 30% 96%;
+    --secondary-foreground: 142 76% 20%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 142 76% 45%;
+    --accent-foreground: 355 100% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 142 76% 36%;
+    --radius: 1.25rem;
   }
 }
 
@@ -59,9 +32,22 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-foreground font-body antialiased;
   }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-headline;
-  }
+}
+
+/* Geliştirme aşamasında görünen framework ikonlarını/badge'leri gizle */
+#nextjs-portal,
+[data-nextjs-toast-wrapper],
+.nextjs-toast-errors-parent {
+  display: none !important;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
 }
