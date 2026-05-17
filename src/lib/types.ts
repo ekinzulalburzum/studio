@@ -12,7 +12,6 @@ export interface Lamb {
   birthDate: string; // ISO string
   birthTime: string; // HH:mm
   photoUrl: string;
-  motherId?: string;
   vaccines: Vaccine[];
 }
 

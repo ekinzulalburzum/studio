@@ -36,23 +36,23 @@ export default function Home() {
     } else {
       const mockLambs: Lamb[] = [
         {
-          id: '1',
+          id: 'TR-101',
           name: 'Kınalı',
           birthDate: new Date().toISOString(),
           birthTime: '08:30',
           photoUrl: 'https://picsum.photos/seed/kuzu1/600/400',
           vaccines: [
-            { id: 'v1', name: 'CD&T (1. Doz)', dueDate: new Date(Date.now() + 86400000).toISOString(), isCompleted: false },
+            { id: 'v1', name: 'Karma Aşı (Enterotoksemi)', dueDate: new Date(Date.now() + 86400000).toISOString(), isCompleted: false },
           ]
         },
         {
-          id: '2',
-          name: 'Beyaz',
+          id: 'TR-102',
+          name: 'Pamuk',
           birthDate: new Date(Date.now() - 604800000).toISOString(),
           birthTime: '14:15',
           photoUrl: 'https://picsum.photos/seed/kuzu2/600/400',
           vaccines: [
-            { id: 'v2', name: 'CD&T (1. Doz)', dueDate: new Date(Date.now() + 10 * 86400000).toISOString(), isCompleted: false },
+            { id: 'v2', name: 'Karma Aşı (Enterotoksemi)', dueDate: new Date(Date.now() + 10 * 86400000).toISOString(), isCompleted: false },
           ]
         }
       ];
@@ -71,8 +71,8 @@ export default function Home() {
     saveLambs(updated);
     setActiveTab('list');
     toast({
-      title: "Başarılı!",
-      description: `${newLamb.name} başarıyla kaydedildi.`,
+      title: "Kayıt Başarılı",
+      description: `${newLamb.name} sisteme eklendi.`,
     });
   };
 
@@ -81,8 +81,8 @@ export default function Home() {
     saveLambs(updated);
     toast({
       variant: "destructive",
-      title: "Silindi",
-      description: "Kuzu kaydı başarıyla silindi.",
+      title: "Kayıt Silindi",
+      description: "Kuzu verileri temizlendi.",
     });
   };
 
@@ -104,12 +104,17 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
-      {/* Simplified Header */}
+      {/* Header */}
       <header className="bg-white border-b px-6 py-4 sticky top-0 z-30">
         <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
-          <h1 className="text-2xl font-black text-primary tracking-tighter">KuzuTakip</h1>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <Activity className="text-white h-5 w-5" />
+            </div>
+            <h1 className="text-xl font-black text-slate-900 tracking-tighter">KuzuTakip</h1>
+          </div>
           <Button size="icon" variant="ghost" className="rounded-full">
-            <Bell className="h-5 w-5" />
+            <Bell className="h-5 w-5 text-slate-400" />
           </Button>
         </div>
       </header>
@@ -117,45 +122,42 @@ export default function Home() {
       <main className="flex-1 max-w-4xl mx-auto w-full pb-24">
         {activeTab === 'list' && (
           <div className="p-4 space-y-6 animate-fade-in">
-            {/* Stats */}
+            {/* Stats Overview */}
             <div className="grid grid-cols-3 gap-3">
-              <Card className="border-none shadow-sm rounded-2xl bg-white">
+              <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
                 <CardContent className="p-3 flex flex-col items-center">
-                  <TrendingUp className="h-4 w-4 text-primary mb-1" />
-                  <span className="text-xl font-bold">{stats.total}</span>
-                  <span className="text-[10px] text-muted-foreground font-bold">TOPLAM</span>
+                  <span className="text-xl font-black text-slate-900">{stats.total}</span>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">TOPLAM</span>
                 </CardContent>
               </Card>
-              <Card className="border-none shadow-sm rounded-2xl bg-white">
+              <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
                 <CardContent className="p-3 flex flex-col items-center">
-                  <Activity className="h-4 w-4 text-destructive mb-1" />
-                  <span className="text-xl font-bold">{stats.pendingVaccines}</span>
-                  <span className="text-[10px] text-muted-foreground font-bold">AŞI</span>
+                  <span className="text-xl font-black text-destructive">{stats.pendingVaccines}</span>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">AŞI</span>
                 </CardContent>
               </Card>
-              <Card className="border-none shadow-sm rounded-2xl bg-white">
+              <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
                 <CardContent className="p-3 flex flex-col items-center">
-                  <Calendar className="h-4 w-4 text-accent-foreground mb-1" />
-                  <span className="text-xl font-bold">{stats.newborns}</span>
-                  <span className="text-[10px] text-muted-foreground font-bold">YENİ</span>
+                  <span className="text-xl font-black text-primary">{stats.newborns}</span>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">YENİ</span>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Search */}
+            {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input 
-                placeholder="Ara..." 
-                className="pl-9 h-12 bg-white border-none shadow-sm rounded-xl focus-visible:ring-primary"
+                placeholder="Kuzu ismi veya küpe no ile ara..." 
+                className="pl-11 h-14 bg-white border-none shadow-sm rounded-2xl focus-visible:ring-primary text-sm font-medium"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
-            <div className="flex items-center justify-between px-2">
-              <h2 className="text-lg font-bold flex items-center gap-2">
-                <LayoutDashboard className="h-4 w-4 text-primary" /> Sürü Listesi
+            <div className="flex items-center justify-between px-2 pt-2">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                Sürü Listesi
               </h2>
             </div>
 
@@ -170,9 +172,12 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                <List className="h-12 w-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-muted-foreground font-medium">Kuzu kaydı bulunamadı.</p>
+              <div className="text-center py-20 bg-white rounded-[2.5rem] border-2 border-dashed border-slate-200">
+                <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <List className="h-8 w-8 text-slate-200" />
+                </div>
+                <p className="text-slate-400 font-bold text-sm">Henüz kuzu kaydı yok.</p>
+                <Button variant="link" onClick={() => setActiveTab('add')} className="mt-2 text-primary">Yeni kuzu ekle</Button>
               </div>
             )}
           </div>
@@ -191,29 +196,33 @@ export default function Home() {
       </main>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t px-6 py-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-t border-slate-100 px-6 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
         <nav className="max-w-md mx-auto flex justify-between items-center">
           <button 
             onClick={() => setActiveTab('list')}
-            className={`flex flex-col items-center p-2 gap-1 transition-colors ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-1 transition-all duration-300 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400 hover:text-slate-600'}`}
           >
-            <List className="h-6 w-6" />
-            <span className="text-[10px] font-bold">Sürü</span>
+            <div className={`p-1 rounded-lg ${activeTab === 'list' ? 'bg-primary/10' : ''}`}>
+              <LayoutDashboard className="h-6 w-6" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-tighter">Sürü</span>
           </button>
           
           <button 
             onClick={() => setActiveTab('add')}
-            className="bg-primary text-white h-14 w-14 rounded-full flex items-center justify-center -mt-10 shadow-lg shadow-primary/30 border-4 border-white active:scale-95 transition-transform"
+            className="bg-primary text-white h-14 w-14 rounded-2xl flex items-center justify-center -mt-12 shadow-xl shadow-primary/30 border-4 border-white active:scale-90 transition-all duration-300"
           >
             <PlusCircle className="h-8 w-8" />
           </button>
 
           <button 
             onClick={() => setActiveTab('health-assistant')}
-            className={`flex flex-col items-center p-2 gap-1 transition-colors ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-1 transition-all duration-300 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400 hover:text-slate-600'}`}
           >
-            <MessageSquare className="h-6 w-6" />
-            <span className="text-[10px] font-bold">Sağlık</span>
+            <div className={`p-1 rounded-lg ${activeTab === 'health-assistant' ? 'bg-primary/10' : ''}`}>
+              <MessageSquare className="h-6 w-6" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-tighter">Destek</span>
           </button>
         </nav>
       </div>
