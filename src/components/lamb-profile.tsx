@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -41,7 +40,7 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
       setAiAdvice(result.answer);
     } catch (error) {
       console.error("AI Tavsiye hatası:", error);
-      setAiAdvice("Sağlık önerileri şu an oluşturulamadı. Lütfen internet bağlantınızı kontrol edin.");
+      setAiAdvice("Sağlık önerileri şu an oluşturulamadı.");
     } finally {
       setIsAiLoading(false);
     }
@@ -52,16 +51,16 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
   }, [lamb.id, completedVaccines]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 animate-fade-in pb-28">
-      {/* Header Image */}
-      <div className="relative h-72 w-full overflow-hidden">
+    <div className="flex flex-col animate-fade-in pb-10">
+      {/* Profil Görseli */}
+      <div className="relative h-64 w-full overflow-hidden rounded-b-[2.5rem] shadow-lg">
         <Image 
           src={lamb.photoUrl} 
           alt={lamb.name} 
           fill 
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
         <Button 
           variant="ghost" 
           size="icon" 
@@ -77,7 +76,7 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
       </div>
 
       <div className="px-6 -mt-6 relative z-10 space-y-6">
-        {/* Info Card */}
+        {/* Temel Bilgiler Kartı */}
         <Card className="border-none shadow-xl rounded-[2rem] bg-white">
           <CardContent className="p-6">
             <div className="grid grid-cols-2 gap-4">
@@ -85,14 +84,14 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Doğum Tarihi</span>
                 <div className="flex items-center gap-2 text-slate-700 font-bold">
                   <Calendar className="h-4 w-4 text-primary" />
-                  <span>{format(new Date(lamb.birthDate), 'dd MMM yyyy', { locale: tr })}</span>
+                  <span className="text-sm">{format(new Date(lamb.birthDate), 'dd MMM yyyy', { locale: tr })}</span>
                 </div>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Yaş</span>
                 <div className="flex items-center gap-2 text-slate-700 font-bold">
                   <Clock className="h-4 w-4 text-primary" />
-                  <span>{ageInDays} Günlük</span>
+                  <span className="text-sm">{ageInDays} Günlük</span>
                 </div>
               </div>
             </div>
@@ -112,7 +111,7 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
           </CardContent>
         </Card>
 
-        {/* Vaccine List */}
+        {/* Aşı Takvimi */}
         <div className="space-y-4">
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
             <Syringe className="h-5 w-5 text-primary" /> Aşı Takvimi
@@ -152,7 +151,7 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
           </div>
         </div>
 
-        {/* AI Recommendations Section */}
+        {/* AI Sağlık Önerileri */}
         <div className="space-y-4">
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-amber-500" /> AI Sağlık Önerileri
@@ -170,7 +169,7 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
                     "{aiAdvice || 'Kuzunuzun aşı durumuna göre size özel tavsiyeler burada görünecek.'}"
                   </p>
                   <p className="text-[9px] text-amber-600 font-bold uppercase tracking-tighter opacity-60">
-                    * Bu öneriler bilgilendirme amaçlıdır, mutlaka veteriner hekiminize danışın.
+                    * Bu öneriler bilgilendirme amaçlıdır, veteriner hekiminize danışın.
                   </p>
                 </div>
               )}

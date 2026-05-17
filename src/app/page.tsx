@@ -71,7 +71,6 @@ export default function HomePage() {
       setNotificationPermission(Notification.permission);
     }
 
-    // Periyodik kontrol: Sabah 08:00
     const checkInterval = setInterval(() => {
       const now = new Date();
       if (now.getHours() === 8 && now.getMinutes() === 0) {
@@ -158,42 +157,39 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 overflow-x-hidden">
-      {/* Header - Native App Header Style */}
-      {activeTab !== 'profile' && (
-        <header className="bg-white border-b px-6 py-4 sticky top-0 z-[100] shadow-sm safe-top">
-          <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
-                <Activity className="text-white h-6 w-6" />
-              </div>
-              <div>
-                <h1 className="text-xl font-black text-slate-900 leading-tight">KuzuTakip</h1>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sürü Yönetimi</p>
-              </div>
+      {/* Header - Sabit Üst Bölüm */}
+      <header className="bg-white border-b px-6 py-4 sticky top-0 z-[100] shadow-sm safe-top">
+        <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+              <Activity className="text-white h-6 w-6" />
             </div>
-            <div className="flex items-center gap-2">
-              {notificationPermission !== 'granted' && (
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-9 text-xs font-bold"
-                  onClick={requestPermission}
-                >
-                  <Bell className="h-4 w-4" /> Bildirimler
-                </Button>
-              )}
-              <Button size="icon" variant="ghost" className="rounded-full h-10 w-10">
-                <Settings className="h-6 w-6 text-slate-500" />
-              </Button>
+            <div>
+              <h1 className="text-xl font-black text-slate-900 leading-tight">KuzuTakip</h1>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sürü Yönetimi</p>
             </div>
           </div>
-        </header>
-      )}
+          <div className="flex items-center gap-2">
+            {notificationPermission !== 'granted' && (
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-9 text-xs font-bold"
+                onClick={requestPermission}
+              >
+                <Bell className="h-4 w-4" /> Bildirimler
+              </Button>
+            )}
+            <Button size="icon" variant="ghost" className="rounded-full h-10 w-10">
+              <Settings className="h-6 w-6 text-slate-500" />
+            </Button>
+          </div>
+        </div>
+      </header>
 
-      <main className={`flex-1 ${activeTab !== 'profile' ? 'max-w-4xl mx-auto w-full pb-32' : ''}`}>
+      <main className="flex-1 max-w-4xl mx-auto w-full pb-32">
         {activeTab === 'list' && (
           <div className="p-4 space-y-6 animate-fade-in">
-            {/* Stats Dashboard */}
             <div className="grid grid-cols-3 gap-3">
               {[
                 { label: 'TOPLAM', val: stats.total, color: 'text-slate-900' },
@@ -209,7 +205,6 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Search Input */}
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
               <Input 
@@ -271,35 +266,36 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* APK Ready Bottom Navigation */}
-      {activeTab !== 'profile' && (
-        <div className="fixed bottom-0 left-0 right-0 z-[99999] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-10 py-5 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] safe-bottom">
-          <nav className="max-w-md mx-auto flex justify-between items-center">
-            <button 
-              onClick={() => setActiveTab('list')}
-              className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
-            >
-              <Home className={`h-7 w-7 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
-              <span className="text-[10px] font-black uppercase tracking-tight">Sürü</span>
-            </button>
-            
-            <button 
-              onClick={() => setActiveTab('add')}
-              className="bg-primary text-white h-16 w-16 rounded-[1.75rem] flex items-center justify-center -mt-16 shadow-2xl shadow-primary/40 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative z-[100000]"
-            >
-              <Plus className="h-9 w-9 stroke-[3]" />
-            </button>
+      {/* Sabit Alt Navigasyon (Her Sayfada) */}
+      <div className="fixed bottom-0 left-0 right-0 z-[99999] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-10 py-5 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] safe-bottom">
+        <nav className="max-w-md mx-auto flex justify-between items-center">
+          <button 
+            onClick={() => setActiveTab('list')}
+            className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
+          >
+            <Home className={`h-7 w-7 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[10px] font-black uppercase tracking-tight">Sürü</span>
+          </button>
+          
+          <button 
+            onClick={() => {
+              setSelectedLambId(null);
+              setActiveTab('add');
+            }}
+            className="bg-primary text-white h-16 w-16 rounded-[1.75rem] flex items-center justify-center -mt-16 shadow-2xl shadow-primary/40 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative z-[100000]"
+          >
+            <Plus className="h-9 w-9 stroke-[3]" />
+          </button>
 
-            <button 
-              onClick={() => setActiveTab('health-assistant')}
-              className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
-            >
-              <MessageCircle className={`h-7 w-7 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
-              <span className="text-[10px] font-black uppercase tracking-tight">Asistan</span>
-            </button>
-          </nav>
-        </div>
-      )}
+          <button 
+            onClick={() => setActiveTab('health-assistant')}
+            className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
+          >
+            <MessageCircle className={`h-7 w-7 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[10px] font-black uppercase tracking-tight">Asistan</span>
+          </button>
+        </nav>
+      </div>
 
       <Toaster />
     </div>
