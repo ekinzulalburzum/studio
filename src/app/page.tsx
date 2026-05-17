@@ -174,8 +174,8 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Modern Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-lg border-t border-slate-100 px-8 py-4 shadow-[0_-8px_30px_rgba(0,0,0,0.04)]">
+      {/* Modern Bottom Nav - Higher z-index to stay on top of any dev tools */}
+      <div className="fixed bottom-0 left-0 right-0 z-[9999] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-8 py-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
         <nav className="max-w-md mx-auto flex justify-between items-center relative">
           <button 
             onClick={() => setActiveTab('list')}
@@ -187,7 +187,7 @@ export default function HomePage() {
           
           <button 
             onClick={() => setActiveTab('add')}
-            className="bg-primary text-white h-14 w-14 rounded-full flex items-center justify-center -mt-14 shadow-xl shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative z-10"
+            className="bg-primary text-white h-14 w-14 rounded-full flex items-center justify-center -mt-14 shadow-xl shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative z-[10000]"
           >
             <Plus className="h-8 w-8 stroke-[3]" />
           </button>
