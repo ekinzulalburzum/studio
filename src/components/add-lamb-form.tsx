@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Camera, Save, X, Sparkles, Syringe } from 'lucide-react';
+import { Camera, Save, X, Sparkles, Syringe, Loader2 } from 'lucide-react';
 import { Lamb, Vaccine } from '@/lib/types';
 import { format, addDays } from 'date-fns';
 import Image from 'next/image';
@@ -19,6 +19,7 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
   const [birthDate, setBirthDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [birthTime, setBirthTime] = useState(format(new Date(), 'HH:mm'));
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Veteriner Standartlarına Uygun Aşı Takvimi
@@ -28,25 +29,25 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
       { 
         id: Math.random().toString(), 
         name: 'Karma Aşı (Çelerme) 1. Doz', 
-        dueDate: addDays(baseDate, 42).toISOString(), // 6. Hafta
+        dueDate: addDays(baseDate, 42).toISOString(), 
         isCompleted: false 
       },
       { 
         id: Math.random().toString(), 
-        name: 'Pasteurella (Zatürre/Pasteurellosis)', 
-        dueDate: addDays(baseDate, 56).toISOString(), // 8. Hafta
+        name: 'Pasteurella (Zatürre)', 
+        dueDate: addDays(baseDate, 56).toISOString(), 
         isCompleted: false 
       },
       { 
         id: Math.random().toString(), 
         name: 'Karma Aşı (Rapel/Tekrar)', 
-        dueDate: addDays(baseDate, 70).toISOString(), // 10. Hafta
+        dueDate: addDays(baseDate, 70).toISOString(), 
         isCompleted: false 
       },
       { 
         id: Math.random().toString(), 
         name: 'Şap Aşısı', 
-        dueDate: addDays(baseDate, 84).toISOString(), // 12. Hafta
+        dueDate: addDays(baseDate, 84).toISOString(), 
         isCompleted: false 
       },
     ];
@@ -56,20 +57,65 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new (window as any).Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 600;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          // Kvaliteyi %60'a düşürerek JPEG olarak sıkıştır
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+          resolve(compressedDataUrl);
+        };
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+    });
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setIsCompressing(true);
+      try {
+        const compressed = await compressImage(file);
+        setPhotoPreview(compressed);
+      } catch (error) {
+        console.error("Görüntü sıkıştırma hatası:", error);
+      } finally {
+        setIsCompressing(false);
+      }
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || isCompressing) return;
 
     const newLamb: Lamb = {
       id: Math.random().toString(36).substr(2, 6).toUpperCase(),
@@ -99,7 +145,12 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
           onClick={handlePhotoClick}
           className="relative flex flex-col items-center justify-center h-48 border-2 border-dashed border-slate-200 rounded-[1.5rem] bg-slate-50 overflow-hidden hover:bg-slate-100 transition-all cursor-pointer"
         >
-          {photoPreview ? (
+          {isCompressing ? (
+            <div className="flex flex-col items-center gap-2">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+              <p className="text-xs text-slate-400 font-bold">Resim İşleniyor...</p>
+            </div>
+          ) : photoPreview ? (
             <Image src={photoPreview} alt="Preview" fill className="object-cover" />
           ) : (
             <>
@@ -153,7 +204,11 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
         </div>
 
         <div className="pt-2">
-          <Button type="submit" className="w-full bg-primary hover:bg-primary/90 h-14 text-base font-bold rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">
+          <Button 
+            type="submit" 
+            disabled={isCompressing}
+            className="w-full bg-primary hover:bg-primary/90 h-14 text-base font-bold rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95"
+          >
             <Save className="mr-2 h-5 w-5" /> Kaydı Tamamla
           </Button>
         </div>
@@ -164,7 +219,7 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
         <div className="space-y-1">
           <h4 className="text-xs font-bold text-emerald-900">Otomatik Aşı Takvimi</h4>
           <p className="text-[10px] text-emerald-700/80 leading-relaxed font-medium">
-            Kuzu eklendiğinde; Karma, Zatürre ve Şap aşıları 6., 8., 10. ve 12. haftalar için otomatik olarak planlanır.
+            Kuzunuz için Karma, Zatürre ve Şap aşıları veterinerlik standartlarına göre otomatik planlanır.
           </p>
         </div>
       </div>

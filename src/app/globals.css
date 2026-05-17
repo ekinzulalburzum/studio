@@ -36,11 +36,19 @@
   }
 }
 
-/* Geliştirme aşamasında görünen framework ikonlarını/badge'leri gizle */
+/* Next.js ve Turbopack geliştirme ikonlarını/badge'leri tamamen gizle */
 #nextjs-portal,
 [data-nextjs-toast-wrapper],
-.nextjs-toast-errors-parent {
+.nextjs-toast-errors-parent,
+[data-turbopack-overlay],
+#nextjs-dev-overlay,
+div[style*="z-index: 2147483647"] {
   display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 @keyframes fade-in {
