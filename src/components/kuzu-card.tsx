@@ -2,19 +2,32 @@
 "use client";
 
 import Image from 'next/image';
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Syringe, Bell, ChevronRight } from "lucide-react";
+import { Calendar, Clock, Syringe, Bell, Trash2 } from "lucide-react";
 import { Lamb } from '@/lib/types';
 import { format, isBefore, addDays } from 'date-fns';
 import { tr } from 'date-fns/locale';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from '@/components/ui/button';
 
 interface KuzuCardProps {
   lamb: Lamb;
   onSelect?: (lamb: Lamb) => void;
+  onDelete?: () => void;
 }
 
-export function KuzuCard({ lamb, onSelect }: KuzuCardProps) {
+export function KuzuCard({ lamb, onSelect, onDelete }: KuzuCardProps) {
   const pendingVaccines = lamb.vaccines.filter(v => !v.isCompleted);
   const upcomingVaccine = pendingVaccines[0];
   
@@ -22,61 +35,88 @@ export function KuzuCard({ lamb, onSelect }: KuzuCardProps) {
 
   return (
     <Card 
-      className="overflow-hidden border-none shadow-xl shadow-primary/5 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 cursor-pointer animate-fade-in bg-white/90 backdrop-blur-sm rounded-[2.5rem] group"
+      className="overflow-hidden border-none shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in bg-white rounded-2xl group"
       onClick={() => onSelect?.(lamb)}
     >
-      <div className="flex p-4 gap-4">
-        {/* Profile Image Section */}
-        <div className="relative h-32 w-32 shrink-0 rounded-[2rem] overflow-hidden shadow-inner">
+      <div className="flex p-3 gap-3">
+        {/* Profile Image */}
+        <div className="relative h-24 w-24 shrink-0 rounded-xl overflow-hidden bg-slate-100">
           <Image 
             src={lamb.photoUrl} 
             alt={lamb.name}
             fill
-            className="object-cover group-hover:scale-110 transition-transform duration-500"
-            data-ai-hint="newborn lamb"
+            className="object-cover"
+            data-ai-hint="lamb profile"
           />
           {isVaccineNear && (
-            <div className="absolute top-2 right-2 bg-destructive text-destructive-foreground p-1.5 rounded-full shadow-lg animate-pulse">
-              <Bell className="h-3 w-3" />
+            <div className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-full shadow-sm animate-pulse">
+              <Bell className="h-2 w-2" />
             </div>
           )}
         </div>
 
-        {/* Info Section */}
-        <div className="flex-1 flex flex-col justify-between py-1">
+        {/* Info */}
+        <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
           <div>
             <div className="flex justify-between items-start">
-              <h3 className="text-xl font-black text-primary leading-tight">{lamb.name}</h3>
-              <Badge variant="outline" className="text-[10px] font-bold border-accent text-accent-foreground rounded-lg py-0 px-2">
-                #{lamb.id.slice(0, 4)}
-              </Badge>
+              <h3 className="text-base font-bold text-slate-900 truncate pr-1">{lamb.name}</h3>
+              <div className="flex items-center gap-1">
+                <Badge variant="outline" className="text-[9px] font-bold border-slate-200 text-slate-500 rounded-md px-1 py-0 h-4">
+                  #{lamb.id.slice(0, 4)}
+                </Badge>
+                
+                {/* Delete Button */}
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-6 w-6 text-slate-300 hover:text-destructive hover:bg-destructive/5"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Kuzuyu Sil?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {lamb.name} isimli kuzuyu silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                      <AlertDialogAction onClick={onDelete} className="bg-destructive hover:bg-destructive/90">Sil</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             </div>
             
-            <div className="mt-2 space-y-1">
-              <div className="flex items-center gap-2 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+            <div className="mt-1 space-y-0.5">
+              <div className="flex items-center gap-1.5 text-[10px] text-slate-500">
                 <Calendar className="h-3 w-3 text-primary" />
                 <span>{format(new Date(lamb.birthDate), 'dd MMMM yyyy', { locale: tr })}</span>
               </div>
-              <div className="flex items-center gap-2 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+              <div className="flex items-center gap-1.5 text-[10px] text-slate-500">
                 <Clock className="h-3 w-3 text-primary" />
                 <span>{lamb.birthTime}</span>
               </div>
             </div>
           </div>
           
-          <div className="flex items-center justify-between mt-2">
+          <div className="mt-2">
             {upcomingVaccine ? (
-              <div className={`flex-1 px-3 py-2 rounded-xl flex items-center gap-2 text-[10px] font-black uppercase tracking-tighter ${isVaccineNear ? 'bg-destructive/10 text-destructive' : 'bg-secondary/50 text-secondary-foreground'}`}>
+              <div className={`px-2 py-1 rounded-lg flex items-center gap-1.5 text-[9px] font-bold uppercase ${isVaccineNear ? 'bg-destructive/10 text-destructive' : 'bg-slate-100 text-slate-600'}`}>
                 <Syringe className="h-3 w-3" />
                 <span className="truncate">{upcomingVaccine.name} • {format(new Date(upcomingVaccine.dueDate), 'dd MMM', { locale: tr })}</span>
               </div>
             ) : (
-              <div className="flex-1 px-3 py-2 rounded-xl bg-accent/10 text-accent-foreground flex items-center gap-2 text-[10px] font-black uppercase tracking-tighter">
+              <div className="px-2 py-1 rounded-lg bg-emerald-50 text-emerald-600 flex items-center gap-1.5 text-[9px] font-bold uppercase">
                 <Syringe className="h-3 w-3" />
-                <span>Tüm Aşılar Tamam</span>
+                <span>Aşılar Tamam</span>
               </div>
             )}
-            <ChevronRight className="h-5 w-5 text-muted-foreground/30 ml-2 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
       </div>

@@ -11,14 +11,12 @@ import {
   List, 
   PlusCircle, 
   MessageSquare, 
-  Settings, 
-  ChevronRight,
-  Bell,
   Search,
   LayoutDashboard,
   TrendingUp,
   Activity,
-  Calendar
+  Calendar,
+  Bell
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -78,6 +76,16 @@ export default function Home() {
     });
   };
 
+  const handleDeleteLamb = (id: string) => {
+    const updated = lambs.filter(l => l.id !== id);
+    saveLambs(updated);
+    toast({
+      variant: "destructive",
+      title: "Silindi",
+      description: "Kuzu kaydı başarıyla silindi.",
+    });
+  };
+
   const filteredLambs = lambs.filter(l => 
     l.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     l.id.includes(searchTerm)
@@ -90,104 +98,81 @@ export default function Home() {
       const bDate = new Date(l.birthDate);
       const now = new Date();
       const diff = Math.abs(now.getTime() - bDate.getTime());
-      return diff < 7 * 24 * 60 * 60 * 1000; // Last 7 days
+      return diff < 7 * 24 * 60 * 60 * 1000;
     }).length
   };
 
   return (
-    <div className="flex flex-col min-h-screen pb-24 bg-background">
-      {/* Premium Header */}
-      <header className="bg-primary text-primary-foreground px-6 py-8 shadow-xl sticky top-0 z-30 rounded-b-[2.5rem] overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-accent/20 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-        <div className="relative flex justify-between items-center max-w-4xl mx-auto w-full">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">KuzuTakip</h1>
-            <p className="text-sm opacity-90 font-medium">Hoş geldin, Çiftçi</p>
-          </div>
-          <div className="flex gap-3">
-            <Button size="icon" variant="ghost" className="rounded-full bg-white/10 hover:bg-white/20">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <Button size="icon" variant="ghost" className="rounded-full bg-white/10 hover:bg-white/20">
-              <Settings className="h-5 w-5" />
-            </Button>
-          </div>
+    <div className="flex flex-col min-h-screen bg-slate-50">
+      {/* Simplified Header */}
+      <header className="bg-white border-b px-6 py-4 sticky top-0 z-30">
+        <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
+          <h1 className="text-2xl font-black text-primary tracking-tighter">KuzuTakip</h1>
+          <Button size="icon" variant="ghost" className="rounded-full">
+            <Bell className="h-5 w-5" />
+          </Button>
         </div>
       </header>
 
-      <main className="flex-1 max-w-4xl mx-auto w-full -mt-6 relative z-10">
+      <main className="flex-1 max-w-4xl mx-auto w-full pb-24">
         {activeTab === 'list' && (
           <div className="p-4 space-y-6 animate-fade-in">
-            {/* Quick Stats Grid */}
+            {/* Stats */}
             <div className="grid grid-cols-3 gap-3">
-              <Card className="bg-white/80 backdrop-blur-sm border-none shadow-sm rounded-3xl">
-                <CardContent className="p-4 flex flex-col items-center justify-center text-center">
-                  <div className="p-2 bg-primary/10 rounded-2xl mb-2">
-                    <TrendingUp className="h-5 w-5 text-primary" />
-                  </div>
-                  <span className="text-2xl font-black text-primary">{stats.total}</span>
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Toplam</span>
+              <Card className="border-none shadow-sm rounded-2xl bg-white">
+                <CardContent className="p-3 flex flex-col items-center">
+                  <TrendingUp className="h-4 w-4 text-primary mb-1" />
+                  <span className="text-xl font-bold">{stats.total}</span>
+                  <span className="text-[10px] text-muted-foreground font-bold">TOPLAM</span>
                 </CardContent>
               </Card>
-              <Card className="bg-white/80 backdrop-blur-sm border-none shadow-sm rounded-3xl">
-                <CardContent className="p-4 flex flex-col items-center justify-center text-center">
-                  <div className="p-2 bg-destructive/10 rounded-2xl mb-2">
-                    <Activity className="h-5 w-5 text-destructive" />
-                  </div>
-                  <span className="text-2xl font-black text-destructive">{stats.pendingVaccines}</span>
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Aşı</span>
+              <Card className="border-none shadow-sm rounded-2xl bg-white">
+                <CardContent className="p-3 flex flex-col items-center">
+                  <Activity className="h-4 w-4 text-destructive mb-1" />
+                  <span className="text-xl font-bold">{stats.pendingVaccines}</span>
+                  <span className="text-[10px] text-muted-foreground font-bold">AŞI</span>
                 </CardContent>
               </Card>
-              <Card className="bg-white/80 backdrop-blur-sm border-none shadow-sm rounded-3xl">
-                <CardContent className="p-4 flex flex-col items-center justify-center text-center">
-                  <div className="p-2 bg-accent/10 rounded-2xl mb-2">
-                    <Calendar className="h-5 w-5 text-accent-foreground" />
-                  </div>
-                  <span className="text-2xl font-black text-accent-foreground">{stats.newborns}</span>
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Yeni</span>
+              <Card className="border-none shadow-sm rounded-2xl bg-white">
+                <CardContent className="p-3 flex flex-col items-center">
+                  <Calendar className="h-4 w-4 text-accent-foreground mb-1" />
+                  <span className="text-xl font-bold">{stats.newborns}</span>
+                  <span className="text-[10px] text-muted-foreground font-bold">YENİ</span>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Search Section */}
-            <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
-                placeholder="İsim veya küpe no ile ara..." 
-                className="pl-12 h-14 bg-white/90 border-none shadow-sm rounded-2xl focus-visible:ring-primary text-base"
+                placeholder="Ara..." 
+                className="pl-9 h-12 bg-white border-none shadow-sm rounded-xl focus-visible:ring-primary"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
             <div className="flex items-center justify-between px-2">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <LayoutDashboard className="h-5 w-5 text-primary" /> Sürü Listesi
+              <h2 className="text-lg font-bold flex items-center gap-2">
+                <LayoutDashboard className="h-4 w-4 text-primary" /> Sürü Listesi
               </h2>
-              <Button variant="ghost" size="sm" className="text-primary font-bold hover:bg-primary/5">
-                Filtrele <ChevronRight className="ml-1 h-4 w-4" />
-              </Button>
             </div>
 
             {filteredLambs.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredLambs.map(lamb => (
-                  <KuzuCard key={lamb.id} lamb={lamb} />
+                  <KuzuCard 
+                    key={lamb.id} 
+                    lamb={lamb} 
+                    onDelete={() => handleDeleteLamb(lamb.id)}
+                  />
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-white/50 backdrop-blur-sm rounded-[2rem] border-2 border-dashed border-accent/20">
-                <div className="bg-accent/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <List className="h-10 w-10 text-accent opacity-60" />
-                </div>
-                <p className="text-muted-foreground font-medium mb-4 text-lg">Henüz kuzu kaydı yok.</p>
-                <Button 
-                  onClick={() => setActiveTab('add')} 
-                  variant="default"
-                  className="rounded-full px-8 bg-primary hover:bg-primary/90 shadow-lg"
-                >
-                  <PlusCircle className="mr-2 h-5 w-5" /> İlk Kuzuyu Kaydet
-                </Button>
+              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+                <List className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+                <p className="text-muted-foreground font-medium">Kuzu kaydı bulunamadı.</p>
               </div>
             )}
           </div>
@@ -205,33 +190,29 @@ export default function Home() {
         )}
       </main>
 
-      {/* Floating Modern Bottom Navigation */}
-      <div className="fixed bottom-6 left-6 right-6 z-50">
-        <nav className="bg-white/90 backdrop-blur-xl border border-white/20 px-8 py-3 flex justify-between items-center rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.12)]">
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t px-6 py-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+        <nav className="max-w-md mx-auto flex justify-between items-center">
           <button 
             onClick={() => setActiveTab('list')}
-            className={`flex flex-col items-center gap-1 transition-all duration-300 ${activeTab === 'list' ? 'text-primary scale-110' : 'text-muted-foreground hover:text-primary/70'}`}
+            className={`flex flex-col items-center p-2 gap-1 transition-colors ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <div className={`p-2 rounded-xl ${activeTab === 'list' ? 'bg-primary/10' : ''}`}>
-              <List className="h-6 w-6" />
-            </div>
+            <List className="h-6 w-6" />
             <span className="text-[10px] font-bold">Sürü</span>
           </button>
           
           <button 
             onClick={() => setActiveTab('add')}
-            className="flex items-center justify-center -mt-16 bg-primary text-primary-foreground h-16 w-16 rounded-[1.75rem] shadow-2xl shadow-primary/40 border-4 border-background transition-all duration-300 active:scale-90 hover:rotate-90"
+            className="bg-primary text-white h-14 w-14 rounded-full flex items-center justify-center -mt-10 shadow-lg shadow-primary/30 border-4 border-white active:scale-95 transition-transform"
           >
-            <PlusCircle className="h-10 w-10" />
+            <PlusCircle className="h-8 w-8" />
           </button>
 
           <button 
             onClick={() => setActiveTab('health-assistant')}
-            className={`flex flex-col items-center gap-1 transition-all duration-300 ${activeTab === 'health-assistant' ? 'text-primary scale-110' : 'text-muted-foreground hover:text-primary/70'}`}
+            className={`flex flex-col items-center p-2 gap-1 transition-colors ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <div className={`p-2 rounded-xl ${activeTab === 'health-assistant' ? 'bg-primary/10' : ''}`}>
-              <MessageSquare className="h-6 w-6" />
-            </div>
+            <MessageSquare className="h-6 w-6" />
             <span className="text-[10px] font-bold">Sağlık</span>
           </button>
         </nav>
