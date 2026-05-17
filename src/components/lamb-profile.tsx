@@ -112,32 +112,6 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
           </CardContent>
         </Card>
 
-        {/* AI Recommendations Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-amber-500" /> AI Sağlık Önerileri
-          </h2>
-          <Card className="border-none shadow-sm rounded-[2rem] bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100/50">
-            <CardContent className="p-5">
-              {isAiLoading ? (
-                <div className="flex items-center justify-center py-4 gap-3">
-                  <Loader2 className="h-5 w-5 text-amber-500 animate-spin" />
-                  <p className="text-xs font-bold text-amber-700 uppercase tracking-wider">Öneriler Hazırlanıyor...</p>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <p className="text-sm text-amber-900 leading-relaxed font-medium italic">
-                    "{aiAdvice || 'Kuzunuzun aşı durumuna göre size özel tavsiyeler burada görünecek.'}"
-                  </p>
-                  <p className="text-[9px] text-amber-600 font-bold uppercase tracking-tighter opacity-60">
-                    * Bu öneriler bilgilendirme amaçlıdır, mutlaka veteriner hekiminize danışın.
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Vaccine List */}
         <div className="space-y-4">
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
@@ -176,6 +150,32 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
               </div>
             ))}
           </div>
+        </div>
+
+        {/* AI Recommendations Section */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-amber-500" /> AI Sağlık Önerileri
+          </h2>
+          <Card className="border-none shadow-sm rounded-[2rem] bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100/50">
+            <CardContent className="p-5">
+              {isAiLoading ? (
+                <div className="flex items-center justify-center py-4 gap-3">
+                  <Loader2 className="h-5 w-5 text-amber-500 animate-spin" />
+                  <p className="text-xs font-bold text-amber-700 uppercase tracking-wider">Öneriler Hazırlanıyor...</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-sm text-amber-900 leading-relaxed font-medium italic">
+                    "{aiAdvice || 'Kuzunuzun aşı durumuna göre size özel tavsiyeler burada görünecek.'}"
+                  </p>
+                  <p className="text-[9px] text-amber-600 font-bold uppercase tracking-tighter opacity-60">
+                    * Bu öneriler bilgilendirme amaçlıdır, mutlaka veteriner hekiminize danışın.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
