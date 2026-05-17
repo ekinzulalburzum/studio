@@ -15,4 +15,4 @@ export interface Lamb {
   vaccines: Vaccine[];
 }
 
-export type AppTab = 'list' | 'add' | 'health-assistant';
+export type AppTab = 'list' | 'add' | 'health-assistant' | 'profile';

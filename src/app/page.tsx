@@ -1,9 +1,11 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import { KuzuCard } from '@/components/kuzu-card';
 import { AddLambForm } from '@/components/add-lamb-form';
 import { HealthAssistant } from '@/components/health-assistant';
+import { LambProfile } from '@/components/lamb-profile';
 import { AppTab, Lamb } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { 
@@ -22,6 +24,7 @@ import { Card, CardContent } from '@/components/ui/card';
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<AppTab>('list');
   const [lambs, setLambs] = useState<Lamb[]>([]);
+  const [selectedLambId, setSelectedLambId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
 
@@ -65,6 +68,10 @@ export default function HomePage() {
   const handleDeleteLamb = (id: string) => {
     const updated = lambs.filter(l => l.id !== id);
     saveLambs(updated);
+    if (selectedLambId === id) {
+      setActiveTab('list');
+      setSelectedLambId(null);
+    }
     toast({
       variant: "destructive",
       title: "Kayıt Silindi",
@@ -72,10 +79,25 @@ export default function HomePage() {
     });
   };
 
+  const handleUpdateVaccine = (lambId: string, vaccineId: string) => {
+    const updated = lambs.map(l => {
+      if (l.id === lambId) {
+        const updatedVaccines = l.vaccines.map(v => 
+          v.id === vaccineId ? { ...v, isCompleted: !v.isCompleted } : v
+        );
+        return { ...l, vaccines: updatedVaccines };
+      }
+      return l;
+    });
+    saveLambs(updated);
+  };
+
   const filteredLambs = lambs.filter(l => 
     l.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     l.id.includes(searchTerm)
   );
+
+  const selectedLamb = lambs.find(l => l.id === selectedLambId);
 
   const stats = {
     total: lambs.length,
@@ -90,25 +112,27 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b px-6 py-4 sticky top-0 z-30 shadow-sm">
-        <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/20">
-              <Activity className="text-white h-5 w-5" />
+      {/* Header - Only show on main tabs */}
+      {activeTab !== 'profile' && (
+        <header className="bg-white border-b px-6 py-4 sticky top-0 z-30 shadow-sm">
+          <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/20">
+                <Activity className="text-white h-5 w-5" />
+              </div>
+              <div>
+                <h1 className="text-lg font-black text-slate-900 leading-tight">KuzuTakip</h1>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Yönetim Paneli</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-lg font-black text-slate-900 leading-tight">KuzuTakip</h1>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Yönetim Paneli</p>
-            </div>
+            <Button size="icon" variant="ghost" className="rounded-full hover:bg-slate-100">
+              <Bell className="h-5 w-5 text-slate-500" />
+            </Button>
           </div>
-          <Button size="icon" variant="ghost" className="rounded-full hover:bg-slate-100">
-            <Bell className="h-5 w-5 text-slate-500" />
-          </Button>
-        </div>
-      </header>
+        </header>
+      )}
 
-      <main className="flex-1 max-w-4xl mx-auto w-full pb-28">
+      <main className={`flex-1 ${activeTab !== 'profile' ? 'max-w-4xl mx-auto w-full pb-28' : ''}`}>
         {activeTab === 'list' && (
           <div className="p-4 space-y-6 animate-fade-in">
             {/* Stats */}
@@ -149,6 +173,10 @@ export default function HomePage() {
                   <KuzuCard 
                     key={lamb.id} 
                     lamb={lamb} 
+                    onSelect={(l) => {
+                      setSelectedLambId(l.id);
+                      setActiveTab('profile');
+                    }}
                     onDelete={() => handleDeleteLamb(lamb.id)}
                   />
                 ))}
@@ -172,35 +200,48 @@ export default function HomePage() {
         {activeTab === 'health-assistant' && (
           <HealthAssistant />
         )}
+
+        {activeTab === 'profile' && selectedLamb && (
+          <LambProfile 
+            lamb={selectedLamb} 
+            onBack={() => {
+              setActiveTab('list');
+              setSelectedLambId(null);
+            }} 
+            onUpdateVaccine={(vId) => handleUpdateVaccine(selectedLamb.id, vId)}
+          />
+        )}
       </main>
 
-      {/* Modern Bottom Nav - Higher z-index to stay on top of any dev tools */}
-      <div className="fixed bottom-0 left-0 right-0 z-[9999] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-8 py-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
-        <nav className="max-w-md mx-auto flex justify-between items-center relative">
-          <button 
-            onClick={() => setActiveTab('list')}
-            className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
-          >
-            <Home className={`h-6 w-6 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[10px] font-black uppercase tracking-tighter">Sürü</span>
-          </button>
-          
-          <button 
-            onClick={() => setActiveTab('add')}
-            className="bg-primary text-white h-14 w-14 rounded-full flex items-center justify-center -mt-14 shadow-xl shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative z-[10000]"
-          >
-            <Plus className="h-8 w-8 stroke-[3]" />
-          </button>
+      {/* Modern Bottom Nav */}
+      {activeTab !== 'profile' && (
+        <div className="fixed bottom-0 left-0 right-0 z-[9999] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-8 py-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
+          <nav className="max-w-md mx-auto flex justify-between items-center relative">
+            <button 
+              onClick={() => setActiveTab('list')}
+              className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
+            >
+              <Home className={`h-6 w-6 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
+              <span className="text-[10px] font-black uppercase tracking-tighter">Sürü</span>
+            </button>
+            
+            <button 
+              onClick={() => setActiveTab('add')}
+              className="bg-primary text-white h-14 w-14 rounded-full flex items-center justify-center -mt-14 shadow-xl shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative z-[10000]"
+            >
+              <Plus className="h-8 w-8 stroke-[3]" />
+            </button>
 
-          <button 
-            onClick={() => setActiveTab('health-assistant')}
-            className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
-          >
-            <MessageCircle className={`h-6 w-6 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[10px] font-black uppercase tracking-tighter">Destek</span>
-          </button>
-        </nav>
-      </div>
+            <button 
+              onClick={() => setActiveTab('health-assistant')}
+              className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
+            >
+              <MessageCircle className={`h-6 w-6 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
+              <span className="text-[10px] font-black uppercase tracking-tighter">Destek</span>
+            </button>
+          </nav>
+        </div>
+      )}
 
       <Toaster />
     </div>
