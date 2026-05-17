@@ -14,7 +14,8 @@ import {
   MessageCircle, 
   Search,
   Activity,
-  Bell
+  Bell,
+  Settings
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -26,6 +27,7 @@ export default function HomePage() {
   const [lambs, setLambs] = useState<Lamb[]>([]);
   const [selectedLambId, setSelectedLambId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -48,7 +50,51 @@ export default function HomePage() {
       setLambs(mockLambs);
       localStorage.setItem('kuzu_data', JSON.stringify(mockLambs));
     }
+
+    if ("Notification" in window) {
+      setNotificationPermission(Notification.permission);
+    }
+
+    // Her dakika kontrol et: Saat 08:00 mi?
+    const checkInterval = setInterval(() => {
+      const now = new Date();
+      if (now.getHours() === 8 && now.getMinutes() === 0) {
+        checkAndNotify();
+      }
+    }, 60000);
+
+    return () => clearInterval(checkInterval);
   }, []);
+
+  const requestPermission = async () => {
+    if ("Notification" in window) {
+      const permission = await Notification.requestPermission();
+      setNotificationPermission(permission);
+      if (permission === 'granted') {
+        toast({
+          title: "Bildirimler Açıldı",
+          description: "Aşı hatırlatmaları artık size bildirilecek.",
+        });
+        checkAndNotify();
+      }
+    }
+  };
+
+  const checkAndNotify = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const savedLambs: Lamb[] = JSON.parse(localStorage.getItem('kuzu_data') || '[]');
+    
+    const upcomingVaccines = savedLambs.flatMap(l => 
+      l.vaccines.filter(v => !v.isCompleted && v.dueDate.startsWith(today)).map(v => ({...v, lambName: l.name}))
+    );
+
+    if (upcomingVaccines.length > 0 && Notification.permission === 'granted') {
+      new Notification("KuzuTakip: Aşı Vakti!", {
+        body: `Bugün ${upcomingVaccines.length} kuzunun aşısı var. Kontrol etmek için dokunun.`,
+        icon: 'https://picsum.photos/seed/kuzu/100/100'
+      });
+    }
+  };
 
   const saveLambs = (updatedLambs: Lamb[]) => {
     setLambs(updatedLambs);
@@ -112,7 +158,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
-      {/* Header - Only show on main tabs */}
+      {/* Header */}
       {activeTab !== 'profile' && (
         <header className="bg-white border-b px-6 py-4 sticky top-0 z-30 shadow-sm">
           <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
@@ -125,9 +171,21 @@ export default function HomePage() {
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Yönetim Paneli</p>
               </div>
             </div>
-            <Button size="icon" variant="ghost" className="rounded-full hover:bg-slate-100">
-              <Bell className="h-5 w-5 text-slate-500" />
-            </Button>
+            <div className="flex items-center gap-2">
+              {notificationPermission !== 'granted' && (
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-8 text-xs font-bold"
+                  onClick={requestPermission}
+                >
+                  <Bell className="h-3.5 w-3.5" /> Bildirimleri Aç
+                </Button>
+              )}
+              <Button size="icon" variant="ghost" className="rounded-full hover:bg-slate-100">
+                <Settings className="h-5 w-5 text-slate-500" />
+              </Button>
+            </div>
           </div>
         </header>
       )}
