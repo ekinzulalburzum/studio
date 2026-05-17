@@ -1,10 +1,22 @@
-
-import type {Metadata} from 'next';
+import type {Metadata, Viewport} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'KuzuTakip - Kuzu Doğum ve Aşı Takip Sistemi',
+  title: 'KuzuTakip - Mobil Sürü Yönetimi',
   description: 'Doğan kuzularınızı kaydedin ve aşı takvimlerini kolayca yönetin.',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'KuzuTakip',
+  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({

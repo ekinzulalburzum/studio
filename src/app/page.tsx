@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { KuzuCard } from '@/components/kuzu-card';
 import { AddLambForm } from '@/components/add-lamb-form';
 import { HealthAssistant } from '@/components/health-assistant';
@@ -30,6 +29,23 @@ export default function HomePage() {
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
   const { toast } = useToast();
 
+  const checkAndNotify = useCallback(() => {
+    const today = new Date().toISOString().split('T')[0];
+    const savedLambs: Lamb[] = JSON.parse(localStorage.getItem('kuzu_data') || '[]');
+    
+    const upcomingVaccines = savedLambs.flatMap(l => 
+      l.vaccines.filter(v => !v.isCompleted && v.dueDate.startsWith(today)).map(v => ({...v, lambName: l.name}))
+    );
+
+    if (upcomingVaccines.length > 0 && Notification.permission === 'granted') {
+      new Notification("KuzuTakip: Bugün Aşı Günü!", {
+        body: `${upcomingVaccines.length} adet kuzunun aşısı yapılacak. Detaylar için uygulamaya girin.`,
+        icon: 'https://picsum.photos/seed/kuzu/100/100',
+        tag: 'vaccine-alert'
+      });
+    }
+  }, []);
+
   useEffect(() => {
     const saved = localStorage.getItem('kuzu_data');
     if (saved) {
@@ -43,7 +59,7 @@ export default function HomePage() {
           birthTime: '09:00',
           photoUrl: 'https://picsum.photos/seed/kuzu1/600/400',
           vaccines: [
-            { id: 'v1', name: 'Karma Aşı (Çelerme)', dueDate: new Date(Date.now() + 86400000).toISOString(), isCompleted: false },
+            { id: 'v1', name: 'Karma Aşı (Çelerme) 1. Doz', dueDate: new Date(Date.now() + 42 * 24 * 60 * 60 * 1000).toISOString(), isCompleted: false },
           ]
         }
       ];
@@ -55,7 +71,7 @@ export default function HomePage() {
       setNotificationPermission(Notification.permission);
     }
 
-    // Her dakika kontrol et: Saat 08:00 mi?
+    // Periyodik kontrol: Sabah 08:00
     const checkInterval = setInterval(() => {
       const now = new Date();
       if (now.getHours() === 8 && now.getMinutes() === 0) {
@@ -64,7 +80,7 @@ export default function HomePage() {
     }, 60000);
 
     return () => clearInterval(checkInterval);
-  }, []);
+  }, [checkAndNotify]);
 
   const requestPermission = async () => {
     if ("Notification" in window) {
@@ -72,27 +88,11 @@ export default function HomePage() {
       setNotificationPermission(permission);
       if (permission === 'granted') {
         toast({
-          title: "Bildirimler Açıldı",
-          description: "Aşı hatırlatmaları artık size bildirilecek.",
+          title: "Bildirimler Hazır",
+          description: "Aşı günü geldiğinde size haber vereceğim.",
         });
         checkAndNotify();
       }
-    }
-  };
-
-  const checkAndNotify = () => {
-    const today = new Date().toISOString().split('T')[0];
-    const savedLambs: Lamb[] = JSON.parse(localStorage.getItem('kuzu_data') || '[]');
-    
-    const upcomingVaccines = savedLambs.flatMap(l => 
-      l.vaccines.filter(v => !v.isCompleted && v.dueDate.startsWith(today)).map(v => ({...v, lambName: l.name}))
-    );
-
-    if (upcomingVaccines.length > 0 && Notification.permission === 'granted') {
-      new Notification("KuzuTakip: Aşı Vakti!", {
-        body: `Bugün ${upcomingVaccines.length} kuzunun aşısı var. Kontrol etmek için dokunun.`,
-        icon: 'https://picsum.photos/seed/kuzu/100/100'
-      });
     }
   };
 
@@ -106,7 +106,7 @@ export default function HomePage() {
     saveLambs(updated);
     setActiveTab('list');
     toast({
-      title: "Kayıt Başarılı",
+      title: "Başarıyla Kaydedildi",
       description: `${newLamb.name} sisteme eklendi.`,
     });
   };
@@ -157,18 +157,18 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
-      {/* Header */}
+    <div className="flex flex-col min-h-screen bg-slate-50 overflow-x-hidden">
+      {/* Header - Native App Header Style */}
       {activeTab !== 'profile' && (
-        <header className="bg-white border-b px-6 py-4 sticky top-0 z-30 shadow-sm">
+        <header className="bg-white border-b px-6 py-4 sticky top-0 z-[100] shadow-sm safe-top">
           <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/20">
-                <Activity className="text-white h-5 w-5" />
+              <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                <Activity className="text-white h-6 w-6" />
               </div>
               <div>
-                <h1 className="text-lg font-black text-slate-900 leading-tight">KuzuTakip</h1>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Yönetim Paneli</p>
+                <h1 className="text-xl font-black text-slate-900 leading-tight">KuzuTakip</h1>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sürü Yönetimi</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -176,45 +176,45 @@ export default function HomePage() {
                 <Button 
                   size="sm" 
                   variant="outline" 
-                  className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-8 text-xs font-bold"
+                  className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-9 text-xs font-bold"
                   onClick={requestPermission}
                 >
-                  <Bell className="h-3.5 w-3.5" /> Bildirimleri Aç
+                  <Bell className="h-4 w-4" /> Bildirimler
                 </Button>
               )}
-              <Button size="icon" variant="ghost" className="rounded-full hover:bg-slate-100">
-                <Settings className="h-5 w-5 text-slate-500" />
+              <Button size="icon" variant="ghost" className="rounded-full h-10 w-10">
+                <Settings className="h-6 w-6 text-slate-500" />
               </Button>
             </div>
           </div>
         </header>
       )}
 
-      <main className={`flex-1 ${activeTab !== 'profile' ? 'max-w-4xl mx-auto w-full pb-28' : ''}`}>
+      <main className={`flex-1 ${activeTab !== 'profile' ? 'max-w-4xl mx-auto w-full pb-32' : ''}`}>
         {activeTab === 'list' && (
           <div className="p-4 space-y-6 animate-fade-in">
-            {/* Stats */}
+            {/* Stats Dashboard */}
             <div className="grid grid-cols-3 gap-3">
               {[
                 { label: 'TOPLAM', val: stats.total, color: 'text-slate-900' },
                 { label: 'AŞI', val: stats.pendingVaccines, color: 'text-destructive' },
                 { label: 'YENİ', val: stats.newborns, color: 'text-primary' }
               ].map((stat, i) => (
-                <Card key={i} className="border-none shadow-sm rounded-2xl bg-white">
+                <Card key={i} className="border-none shadow-sm rounded-[1.5rem] bg-white">
                   <CardContent className="p-4 flex flex-col items-center justify-center">
                     <span className={`text-2xl font-black ${stat.color}`}>{stat.val}</span>
-                    <span className="text-[10px] text-slate-400 font-bold tracking-wider">{stat.label}</span>
+                    <span className="text-[9px] text-slate-400 font-black tracking-widest">{stat.label}</span>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
-            {/* Search */}
-            <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+            {/* Search Input */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
               <Input 
                 placeholder="İsim veya küpe no ile ara..." 
-                className="pl-11 h-14 bg-white border-none shadow-sm rounded-2xl focus-visible:ring-primary text-sm font-medium"
+                className="pl-12 h-14 bg-white border-none shadow-sm rounded-2xl focus-visible:ring-primary text-base font-medium"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -222,7 +222,7 @@ export default function HomePage() {
 
             <div className="flex items-center justify-between px-1">
               <h2 className="text-lg font-bold text-slate-800">Sürü Listesi</h2>
-              <span className="text-xs font-bold text-slate-400 bg-slate-200/50 px-2 py-1 rounded-full">{filteredLambs.length} Kayıt</span>
+              <span className="text-xs font-bold text-slate-400 bg-slate-200/50 px-3 py-1 rounded-full">{filteredLambs.length} Kayıt</span>
             </div>
 
             {filteredLambs.length > 0 ? (
@@ -241,8 +241,8 @@ export default function HomePage() {
               </div>
             ) : (
               <div className="text-center py-20 bg-white rounded-[2.5rem] border-2 border-dashed border-slate-200">
-                <p className="text-slate-400 font-bold text-sm">Henüz kuzu kaydı bulunamadı.</p>
-                <Button variant="link" onClick={() => setActiveTab('add')} className="mt-2 text-primary">Yeni Ekle</Button>
+                <p className="text-slate-400 font-bold text-sm">Hayvan kaydı bulunamadı.</p>
+                <Button variant="link" onClick={() => setActiveTab('add')} className="mt-2 text-primary">Yeni Kuzu Ekle</Button>
               </div>
             )}
           </div>
@@ -271,31 +271,31 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Modern Bottom Nav */}
+      {/* APK Ready Bottom Navigation */}
       {activeTab !== 'profile' && (
-        <div className="fixed bottom-0 left-0 right-0 z-[9999] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-8 py-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
-          <nav className="max-w-md mx-auto flex justify-between items-center relative">
+        <div className="fixed bottom-0 left-0 right-0 z-[99999] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-10 py-5 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] safe-bottom">
+          <nav className="max-w-md mx-auto flex justify-between items-center">
             <button 
               onClick={() => setActiveTab('list')}
               className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
             >
-              <Home className={`h-6 w-6 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
-              <span className="text-[10px] font-black uppercase tracking-tighter">Sürü</span>
+              <Home className={`h-7 w-7 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
+              <span className="text-[10px] font-black uppercase tracking-tight">Sürü</span>
             </button>
             
             <button 
               onClick={() => setActiveTab('add')}
-              className="bg-primary text-white h-14 w-14 rounded-full flex items-center justify-center -mt-14 shadow-xl shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative z-[10000]"
+              className="bg-primary text-white h-16 w-16 rounded-[1.75rem] flex items-center justify-center -mt-16 shadow-2xl shadow-primary/40 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative z-[100000]"
             >
-              <Plus className="h-8 w-8 stroke-[3]" />
+              <Plus className="h-9 w-9 stroke-[3]" />
             </button>
 
             <button 
               onClick={() => setActiveTab('health-assistant')}
               className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
             >
-              <MessageCircle className={`h-6 w-6 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
-              <span className="text-[10px] font-black uppercase tracking-tighter">Destek</span>
+              <MessageCircle className={`h-7 w-7 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
+              <span className="text-[10px] font-black uppercase tracking-tight">Asistan</span>
             </button>
           </nav>
         </div>

@@ -30,29 +30,35 @@
 @layer base {
   * {
     @apply border-border;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
+  
+  input, textarea {
+    user-select: text;
+  }
+
   body {
     @apply bg-background text-foreground font-body antialiased;
+    overscroll-behavior-y: none;
+    overflow-x: hidden;
   }
 }
 
-/* Tüm Next.js, Turbopack ve Dev Overlay elemanlarını KESİN olarak gizle */
+/* KESİN ÇÖZÜM: Tüm geliştirici araçlarını ve Next.js overlay'lerini tamamen yok et */
 #nextjs-portal,
 nextjs-portal,
 [data-nextjs-toast-wrapper],
-.nextjs-toast-errors-parent,
 [data-turbopack-overlay],
 #nextjs-dev-overlay,
-div[style*="z-index: 2147483647"],
-div[class*="nextjs-"],
-div[id*="nextjs-"] {
+.__next_static_deprecation_messaging,
+div[style*="z-index: 2147483647"] {
   display: none !important;
+  opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  opacity: 0 !important;
   width: 0 !important;
   height: 0 !important;
-  z-index: -1 !important;
 }
 
 @keyframes fade-in {
@@ -62,4 +68,9 @@ div[id*="nextjs-"] {
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
+}
+
+/* APK görünümü için kaydırma çubuğunu gizle */
+::-webkit-scrollbar {
+  display: none;
 }
