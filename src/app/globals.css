@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -39,7 +40,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased text-2xl; /* Metin boyutları büyütüldü */
+    @apply bg-background text-foreground font-body antialiased text-2xl font-bold; 
     overscroll-behavior-y: none;
     overflow-x: hidden;
     position: relative;
@@ -52,16 +53,16 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://picsum.photos/seed/lamb-sheep/1200/800');
+    background-image: url('https://picsum.photos/seed/village-farm-lamb/1200/800');
     background-size: cover;
     background-position: center;
-    opacity: 0.55; /* Daha belirgin kuzu resmi */
+    opacity: 0.65; 
     z-index: -1;
     pointer-events: none;
   }
 }
 
-/* Turbopack ve NextJS Geliştirici İkonlarını Tamamen Gizle */
+/* Geliştirici İkonlarını ve Turbopack Göstergesini Tamamen Gizle */
 [data-turbopack-overlay],
 [data-nextjs-toast-wrapper],
 #nextjs-dev-overlay,
@@ -76,7 +77,8 @@ div[class*="Turbopack"],
 div[id*="Turbopack"],
 div[class*="Nextjs"],
 div[id*="Nextjs"],
-button[aria-label="Turbopack status"] {
+button[aria-label="Turbopack status"],
+[data-nextjs-dev-overlay-button] {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;

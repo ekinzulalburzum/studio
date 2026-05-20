@@ -1,3 +1,4 @@
+
 {
   "placeholderImages": [
     {
@@ -20,9 +21,9 @@
     },
     {
       "id": "farm-bg",
-      "description": "Scenic green farm background with lambs",
-      "imageUrl": "https://picsum.photos/seed/lamb-sheep/1200/800",
-      "imageHint": "lamb sheep"
+      "description": "Scenic village farm background with lambs",
+      "imageUrl": "https://picsum.photos/seed/village-farm-lamb/1200/800",
+      "imageHint": "village farm"
     },
     {
       "id": "sheep-pattern",
