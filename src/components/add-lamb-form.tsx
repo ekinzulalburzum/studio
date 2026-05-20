@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -135,32 +134,32 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
   };
 
   return (
-    <div className="max-w-md mx-auto w-full px-4 py-4 animate-fade-in mb-24">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-primary" /> Yeni Kayıt
+    <div className="max-w-xl mx-auto w-full px-6 py-8 animate-fade-in mb-32">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+          <Sparkles className="h-8 w-8 text-primary" /> Yeni Kayıt
         </h2>
-        <Button variant="ghost" size="icon" onClick={onCancel} className="rounded-full h-8 w-8">
-          <X className="h-4 w-4" />
+        <Button variant="ghost" size="icon" onClick={onCancel} className="rounded-full h-12 w-12">
+          <X className="h-8 w-8" />
         </Button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+      <form onSubmit={handleSubmit} className="space-y-8 bg-white p-8 rounded-[3rem] shadow-xl border border-slate-100">
         <div 
           onClick={handlePhotoClick}
-          className="relative flex flex-col items-center justify-center h-40 border-2 border-dashed border-slate-100 rounded-2xl bg-slate-50/50 overflow-hidden hover:bg-slate-50 transition-all cursor-pointer"
+          className="relative flex flex-col items-center justify-center h-64 border-4 border-dashed border-slate-100 rounded-[2.5rem] bg-slate-50/50 overflow-hidden hover:bg-slate-50 transition-all cursor-pointer"
         >
           {isCompressing ? (
-            <div className="flex flex-col items-center gap-2">
-              <Loader2 className="h-6 w-6 text-primary animate-spin" />
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Resim İşleniyor</p>
+            <div className="flex flex-col items-center gap-4">
+              <Loader2 className="h-10 w-10 text-primary animate-spin" />
+              <p className="text-sm text-slate-400 font-black uppercase tracking-widest">Resim İşleniyor</p>
             </div>
           ) : photoPreview ? (
             <Image src={photoPreview} alt="Preview" fill className="object-cover" />
           ) : (
             <>
-              <Camera className="h-6 w-6 text-slate-300 mb-2" />
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Fotoğraf Çek</p>
+              <Camera className="h-12 w-12 text-slate-300 mb-4" />
+              <p className="text-sm text-slate-400 font-black uppercase tracking-widest text-center px-4">Fotoğraf Çek veya Yükle</p>
             </>
           )}
           <input 
@@ -173,48 +172,48 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
           />
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="name" className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Kuzu Adı / Küpe No</Label>
+        <div className="space-y-3">
+          <Label htmlFor="name" className="text-base font-black text-slate-500 uppercase tracking-widest ml-2">Kuzu Adı / Küpe No</Label>
           <Input 
             id="name" 
             placeholder="Örn: Pamuk" 
             value={name} 
             onChange={(e) => setName(e.target.value)}
             required
-            className="border-none bg-slate-50 focus-visible:ring-primary h-10 rounded-lg text-xs font-medium px-3"
+            className="border-none bg-slate-100 focus-visible:ring-primary h-16 rounded-2xl text-2xl font-black px-6"
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-1.5">
-            <Label htmlFor="date" className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Doğum Tarihi</Label>
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <Label htmlFor="date" className="text-base font-black text-slate-500 uppercase tracking-widest ml-2">Doğum Tarihi</Label>
             <Input 
               id="date" 
               type="date" 
               value={birthDate} 
               onChange={(e) => setBirthDate(e.target.value)}
-              className="border-none bg-slate-50 focus-visible:ring-primary h-10 rounded-lg text-xs px-3"
+              className="border-none bg-slate-100 focus-visible:ring-primary h-16 rounded-2xl text-xl font-black px-6"
             />
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="time" className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Saat</Label>
+          <div className="space-y-3">
+            <Label htmlFor="time" className="text-base font-black text-slate-500 uppercase tracking-widest ml-2">Saat</Label>
             <Input 
               id="time" 
               type="time" 
               value={birthTime} 
               onChange={(e) => setBirthTime(e.target.value)}
-              className="border-none bg-slate-50 focus-visible:ring-primary h-10 rounded-lg text-xs px-3"
+              className="border-none bg-slate-100 focus-visible:ring-primary h-16 rounded-2xl text-xl font-black px-6"
             />
           </div>
         </div>
 
-        <div className="pt-2">
+        <div className="pt-4">
           <Button 
             type="submit" 
             disabled={isCompressing || !birthDate}
-            className="w-full bg-primary hover:bg-primary/90 h-11 text-xs font-bold rounded-lg shadow-md transition-all active:scale-95"
+            className="w-full bg-primary hover:bg-primary/90 h-16 text-xl font-black rounded-2xl shadow-xl shadow-primary/20 transition-all active:scale-95"
           >
-            <Save className="mr-2 h-4 w-4" /> Kaydı Tamamla
+            <Save className="mr-3 h-6 w-6" /> Kaydı Tamamla
           </Button>
         </div>
       </form>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -40,27 +39,27 @@ export function HealthAssistant() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] max-w-2xl mx-auto w-full px-4 py-4 animate-fade-in">
-      <div className="flex items-center gap-2 mb-4">
-        <div className="bg-primary/10 p-2 rounded-full">
-          <Sparkles className="h-5 w-5 text-primary" />
+    <div className="flex flex-col h-[calc(100vh-140px)] max-w-2xl mx-auto w-full px-6 py-6 animate-fade-in">
+      <div className="flex items-center gap-4 mb-6">
+        <div className="bg-primary/10 p-4 rounded-3xl">
+          <Sparkles className="h-8 w-8 text-primary" />
         </div>
         <div>
-          <h2 className="text-lg font-bold">Kuzu Sağlık Rehberi</h2>
-          <p className="text-xs text-muted-foreground">AI destekli bakım önerileri</p>
+          <h2 className="text-3xl font-black">Kuzu Sağlık Rehberi</h2>
+          <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest">AI DESTEKLİ BAKIM ÖNERİLERİ</p>
         </div>
       </div>
 
-      <Card className="flex-1 flex flex-col mb-4 overflow-hidden shadow-sm border-accent/20">
-        <ScrollArea className="flex-1 p-4">
-          <div className="space-y-4">
+      <Card className="flex-1 flex flex-col mb-8 overflow-hidden shadow-2xl border-none rounded-[3rem] bg-white">
+        <ScrollArea className="flex-1 p-6">
+          <div className="space-y-6">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                  <div className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-accent text-accent-foreground'}`}>
-                    {msg.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                <div className={`flex gap-4 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                  <div className={`h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 shadow-md ${msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                    {msg.role === 'user' ? <User className="h-6 w-6" /> : <Bot className="h-6 w-6" />}
                   </div>
-                  <div className={`p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-primary text-primary-foreground rounded-tr-none' : 'bg-secondary text-secondary-foreground rounded-tl-none'}`}>
+                  <div className={`p-5 rounded-[2rem] text-xl font-black ${msg.role === 'user' ? 'bg-primary text-primary-foreground rounded-tr-none' : 'bg-secondary text-secondary-foreground rounded-tl-none'}`}>
                     {msg.content}
                   </div>
                 </div>
@@ -68,11 +67,11 @@ export function HealthAssistant() {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="flex gap-3 max-w-[85%] flex-row">
-                  <div className="h-8 w-8 rounded-full bg-accent text-accent-foreground flex items-center justify-center animate-pulse">
-                    <Bot className="h-4 w-4" />
+                <div className="flex gap-4 max-w-[85%] flex-row">
+                  <div className="h-12 w-12 rounded-2xl bg-secondary text-secondary-foreground flex items-center justify-center animate-pulse">
+                    <Bot className="h-6 w-6" />
                   </div>
-                  <div className="p-3 rounded-2xl text-sm bg-secondary text-secondary-foreground rounded-tl-none animate-pulse">
+                  <div className="p-5 rounded-[2rem] text-xl font-black bg-secondary text-secondary-foreground rounded-tl-none animate-pulse">
                     Yazıyor...
                   </div>
                 </div>
@@ -81,17 +80,17 @@ export function HealthAssistant() {
           </div>
         </ScrollArea>
 
-        <div className="p-4 border-t bg-muted/20">
-          <div className="flex gap-2">
+        <div className="p-6 border-t bg-slate-50/50">
+          <div className="flex gap-4">
             <Input 
-              placeholder="Soru sorun (örn: Kuzu ishali ne yapmalı?)" 
+              placeholder="Soru sorun..." 
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              className="bg-background border-accent/30 focus-visible:ring-primary"
+              className="bg-white h-16 border-none shadow-md rounded-2xl focus-visible:ring-primary text-xl font-black px-6"
             />
-            <Button size="icon" onClick={handleSend} disabled={isLoading || !input.trim()} className="bg-primary hover:bg-primary/90">
-              <Send className="h-4 w-4" />
+            <Button size="icon" onClick={handleSend} disabled={isLoading || !input.trim()} className="bg-primary hover:bg-primary/90 h-16 w-16 rounded-2xl shadow-xl">
+              <Send className="h-8 w-8" />
             </Button>
           </div>
         </div>
