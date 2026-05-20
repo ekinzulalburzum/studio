@@ -38,7 +38,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased text-xl font-bold; 
+    @apply bg-background text-foreground font-body antialiased text-lg font-bold; 
     overscroll-behavior-y: none;
     overflow-x: hidden;
     position: relative;
