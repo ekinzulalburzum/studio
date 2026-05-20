@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -55,6 +54,7 @@ export default function HomePage() {
         {
           id: 'TR-771',
           name: 'Kınalı',
+          gender: 'female',
           birthDate: new Date().toISOString(),
           birthTime: '09:00',
           photoUrl: 'https://picsum.photos/seed/lamb-cute/600/400',

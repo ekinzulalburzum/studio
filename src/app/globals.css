@@ -46,7 +46,7 @@
   }
 }
 
-/* Geliştirici İkonlarını ve Turbopack Göstergesini Tamamen Gizle */
+/* Turbopack ve Geliştirici İkonlarını Tamamen Gizle */
 [data-turbopack-overlay],
 [data-nextjs-toast-wrapper],
 #nextjs-dev-overlay,
