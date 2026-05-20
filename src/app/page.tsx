@@ -157,7 +157,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 overflow-x-hidden">
-      {/* Header - Sabit Üst Bölüm */}
+      {/* Header */}
       <header className="bg-white border-b px-6 py-4 sticky top-0 z-[100] shadow-sm safe-top">
         <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
           <div className="flex items-center gap-2">
@@ -187,7 +187,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-4xl mx-auto w-full pb-32">
+      <main className="flex-1 max-w-4xl mx-auto w-full pb-24">
         {activeTab === 'list' && (
           <div className="p-4 space-y-6 animate-fade-in">
             <div className="grid grid-cols-3 gap-3">
@@ -266,15 +266,18 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Sabit Alt Navigasyon (Her Sayfada) */}
-      <div className="fixed bottom-0 left-0 right-0 z-[99999] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-10 py-5 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] safe-bottom">
+      {/* Küçük ve Sabit Alt Navigasyon (Footer) */}
+      <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-6 py-2.5 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] safe-bottom">
         <nav className="max-w-md mx-auto flex justify-between items-center">
           <button 
-            onClick={() => setActiveTab('list')}
-            className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
+            onClick={() => {
+              setSelectedLambId(null);
+              setActiveTab('list');
+            }}
+            className={`flex flex-col items-center gap-1 transition-all duration-300 flex-1 ${activeTab === 'list' || activeTab === 'profile' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <Home className={`h-7 w-7 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[10px] font-black uppercase tracking-tight">Sürü</span>
+            <Home className={`h-6 w-6 ${activeTab === 'list' || activeTab === 'profile' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[9px] font-bold uppercase">Sürü</span>
           </button>
           
           <button 
@@ -282,17 +285,20 @@ export default function HomePage() {
               setSelectedLambId(null);
               setActiveTab('add');
             }}
-            className="bg-primary text-white h-16 w-16 rounded-[1.75rem] flex items-center justify-center -mt-16 shadow-2xl shadow-primary/40 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative z-[100000]"
+            className="bg-primary text-white h-14 w-14 rounded-2xl flex items-center justify-center -mt-8 shadow-xl shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all duration-300 relative"
           >
-            <Plus className="h-9 w-9 stroke-[3]" />
+            <Plus className="h-7 w-7 stroke-[3]" />
           </button>
 
           <button 
-            onClick={() => setActiveTab('health-assistant')}
-            className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
+            onClick={() => {
+              setSelectedLambId(null);
+              setActiveTab('health-assistant');
+            }}
+            className={`flex flex-col items-center gap-1 transition-all duration-300 flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <MessageCircle className={`h-7 w-7 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[10px] font-black uppercase tracking-tight">Asistan</span>
+            <MessageCircle className={`h-6 w-6 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[9px] font-bold uppercase">Asistan</span>
           </button>
         </nav>
       </div>

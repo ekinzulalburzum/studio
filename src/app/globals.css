@@ -45,12 +45,17 @@
   }
 }
 
-/* Turbopack ve Geliştirici İkonlarını Gizle */
+/* Tüm Geliştirici İkonlarını ve Next.js Dev Overlay'lerini KESİN OLARAK Gizle */
 [data-turbopack-overlay],
-#nextjs-dev-overlay {
+#nextjs-dev-overlay,
+#__next-build-watcher,
+[data-nextjs-toast-wrapper],
+#nextjs-error-feedback-overlay {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  pointer-events: none !important;
+  z-index: -9999 !important;
 }
 
 @keyframes fade-in {
@@ -62,7 +67,7 @@
   animation: fade-in 0.3s ease-out forwards;
 }
 
-/* APK görünümü için kaydırma çubuğunu gizle */
+/* Scroll bar gizle */
 ::-webkit-scrollbar {
   display: none;
 }
