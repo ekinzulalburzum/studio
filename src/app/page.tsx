@@ -39,7 +39,7 @@ export default function HomePage() {
     if (upcomingVaccines.length > 0 && Notification.permission === 'granted') {
       new Notification("KuzuTakip: Bugün Aşı Günü!", {
         body: `${upcomingVaccines.length} adet kuzunun aşısı yapılacak.`,
-        icon: 'https://picsum.photos/seed/lamb1/100/100',
+        icon: 'https://picsum.photos/seed/lamb-cute/100/100',
         tag: 'vaccine-alert'
       });
     }
@@ -56,7 +56,7 @@ export default function HomePage() {
           name: 'Kınalı',
           birthDate: new Date().toISOString(),
           birthTime: '09:00',
-          photoUrl: 'https://picsum.photos/seed/lamb1/600/400',
+          photoUrl: 'https://picsum.photos/seed/lamb-cute/600/400',
           vaccines: [
             { id: 'v1', name: 'Karma Aşı (Çelerme) 1. Doz', dueDate: new Date(Date.now() + 42 * 24 * 60 * 60 * 1000).toISOString(), isCompleted: false },
           ]
@@ -156,15 +156,15 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-transparent overflow-x-hidden">
-      <header className="bg-white/80 backdrop-blur-md border-b px-4 py-2 sticky top-0 z-[100] shadow-sm safe-top">
+      <header className="bg-white/85 backdrop-blur-md border-b px-4 py-3 sticky top-0 z-[100] shadow-sm safe-top">
         <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-              <Activity className="text-white h-6 w-6" />
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+              <Activity className="text-white h-7 w-7" />
             </div>
             <div>
-              <h1 className="text-lg font-black text-slate-900 leading-tight">KuzuTakip</h1>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sürü Yönetimi</p>
+              <h1 className="text-2xl font-black text-slate-900 leading-tight">KuzuTakip</h1>
+              <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest">Sürü Yönetimi</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -172,49 +172,49 @@ export default function HomePage() {
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="rounded-full gap-1 border-primary text-primary hover:bg-primary/5 h-9 text-[11px] font-bold px-3"
+                className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-10 text-[12px] font-black px-4"
                 onClick={requestPermission}
               >
-                <Bell className="h-4 w-4" /> Bildirim
+                <Bell className="h-5 w-5" /> Bildirim
               </Button>
             )}
-            <Button size="icon" variant="ghost" className="rounded-full h-10 w-10">
-              <Settings className="h-6 w-6 text-slate-500" />
+            <Button size="icon" variant="ghost" className="rounded-full h-11 w-11">
+              <Settings className="h-7 w-7 text-slate-500" />
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-4xl mx-auto w-full pb-20">
+      <main className="flex-1 max-w-4xl mx-auto w-full pb-24">
         {activeTab === 'list' && (
-          <div className="p-4 space-y-5 animate-fade-in">
-            <div className="grid grid-cols-3 gap-3">
+          <div className="p-5 space-y-6 animate-fade-in">
+            <div className="grid grid-cols-3 gap-4">
               {[
                 { label: 'SÜRÜ', val: stats.total, color: 'text-slate-900' },
                 { label: 'AŞI', val: stats.pendingVaccines, color: 'text-destructive' },
                 { label: 'YENİ', val: stats.newborns, color: 'text-primary' }
               ].map((stat, i) => (
-                <Card key={i} className="border-none shadow-sm rounded-2xl bg-white/90">
-                  <CardContent className="p-4 flex flex-col items-center justify-center">
-                    <span className={`text-3xl font-black ${stat.color}`}>{stat.val}</span>
-                    <span className="text-[10px] text-slate-400 font-black tracking-widest uppercase mt-0.5">{stat.label}</span>
+                <Card key={i} className="border-none shadow-md rounded-[2rem] bg-white/95 backdrop-blur-sm">
+                  <CardContent className="p-6 flex flex-col items-center justify-center">
+                    <span className={`text-4xl font-black ${stat.color}`}>{stat.val}</span>
+                    <span className="text-[11px] text-slate-400 font-black tracking-widest uppercase mt-1">{stat.label}</span>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-6 w-6 text-slate-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-7 w-7 text-slate-400" />
               <input 
                 placeholder="İsim veya küpe no ile ara..." 
-                className="w-full pl-11 pr-4 h-14 bg-white/90 border-none shadow-sm rounded-xl focus:ring-2 focus:ring-primary text-base font-bold outline-none"
+                className="w-full pl-14 pr-6 h-16 bg-white/95 border-none shadow-md rounded-[1.5rem] focus:ring-2 focus:ring-primary text-lg font-bold outline-none"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
             {filteredLambs.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {filteredLambs.map(lamb => (
                   <KuzuCard 
                     key={lamb.id} 
@@ -228,9 +228,9 @@ export default function HomePage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 bg-white/60 backdrop-blur-sm rounded-3xl border-2 border-dashed border-slate-200">
-                <p className="text-slate-400 font-bold text-sm uppercase tracking-wider">Henüz kayıt yok</p>
-                <Button variant="link" onClick={() => setActiveTab('add')} className="mt-2 text-primary text-base font-bold">Yeni Kuzu Ekle</Button>
+              <div className="text-center py-20 bg-white/70 backdrop-blur-md rounded-[3rem] border-2 border-dashed border-slate-200">
+                <p className="text-slate-400 font-black text-base uppercase tracking-widest">Henüz kayıt yok</p>
+                <Button variant="link" onClick={() => setActiveTab('add')} className="mt-3 text-primary text-xl font-black">Yeni Kuzu Ekle</Button>
               </div>
             )}
           </div>
@@ -259,17 +259,17 @@ export default function HomePage() {
         )}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-md border-t border-slate-100 px-6 py-1.5 shadow-2xl safe-bottom">
-        <nav className="max-w-md mx-auto flex justify-between items-center h-10">
+      <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-8 py-2 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] safe-bottom">
+        <nav className="max-w-md mx-auto flex justify-between items-center h-12">
           <button 
             onClick={() => {
               setSelectedLambId(null);
               setActiveTab('list');
             }}
-            className={`flex flex-col items-center gap-0.5 transition-all flex-1 ${activeTab === 'list' || (activeTab === 'profile' && !selectedLamb) ? 'text-primary' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'list' || (activeTab === 'profile' && !selectedLamb) ? 'text-primary' : 'text-slate-400'}`}
           >
-            <Home className={`h-5 w-5 ${activeTab === 'list' ? 'fill-primary/5' : ''}`} />
-            <span className="text-[10px] font-black uppercase tracking-tighter">Sürü</span>
+            <Home className={`h-6 w-6 ${activeTab === 'list' ? 'fill-primary/5' : ''}`} />
+            <span className="text-[11px] font-black uppercase tracking-tighter">Sürü</span>
           </button>
           
           <button 
@@ -277,9 +277,9 @@ export default function HomePage() {
               setSelectedLambId(null);
               setActiveTab('add');
             }}
-            className="bg-primary text-white h-11 w-11 rounded-full flex items-center justify-center -mt-10 shadow-lg shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all"
+            className="bg-primary text-white h-12 w-12 rounded-2xl flex items-center justify-center -mt-12 shadow-xl shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all"
           >
-            <Plus className="h-7 w-7 stroke-[3]" />
+            <Plus className="h-8 w-8 stroke-[3]" />
           </button>
 
           <button 
@@ -287,10 +287,10 @@ export default function HomePage() {
               setSelectedLambId(null);
               setActiveTab('health-assistant');
             }}
-            className={`flex flex-col items-center gap-0.5 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <MessageCircle className={`h-5 w-5 ${activeTab === 'health-assistant' ? 'fill-primary/5' : ''}`} />
-            <span className="text-[10px] font-black uppercase tracking-tighter">AI Rehber</span>
+            <MessageCircle className={`h-6 w-6 ${activeTab === 'health-assistant' ? 'fill-primary/5' : ''}`} />
+            <span className="text-[11px] font-black uppercase tracking-tighter">AI Rehber</span>
           </button>
         </nav>
       </div>
