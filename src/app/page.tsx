@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -5,6 +6,7 @@ import { KuzuCard } from '@/components/kuzu-card';
 import { AddLambForm } from '@/components/add-lamb-form';
 import { HealthAssistant } from '@/components/health-assistant';
 import { LambProfile } from '@/components/lamb-profile';
+import { SpecialVaccines } from '@/components/special-vaccines';
 import { AppTab, Lamb } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { 
@@ -14,7 +16,8 @@ import {
   Search,
   Activity,
   Bell,
-  Settings
+  Settings,
+  Syringe
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
@@ -31,8 +34,6 @@ export default function HomePage() {
 
   const checkAndNotify = useCallback(() => {
     const today = new Date().toISOString().split('T')[0];
-    
-    // Günde sadece bir kez kontrol et
     if (lastCheckDate === today) return;
 
     const savedLambs: Lamb[] = JSON.parse(localStorage.getItem('kuzu_data') || '[]');
@@ -83,7 +84,6 @@ export default function HomePage() {
       setNotificationPermission(Notification.permission);
     }
 
-    // Her dakika kontrol et, saat 08:00 ise işlemi başlat
     const checkInterval = setInterval(() => {
       const now = new Date();
       if (now.getHours() === 8 && now.getMinutes() === 0) {
@@ -91,9 +91,7 @@ export default function HomePage() {
       }
     }, 60000);
 
-    // Uygulama ilk açıldığında da bir kontrol yap
     checkAndNotify();
-
     return () => clearInterval(checkInterval);
   }, [checkAndNotify]);
 
@@ -119,7 +117,6 @@ export default function HomePage() {
   const handleAddLamb = (newLamb: Lamb) => {
     const updated = [newLamb, ...lambs];
     saveLambs(updated);
-    // Kayıt sonrası doğrudan profil sayfasına yönlendir
     setSelectedLambId(newLamb.id);
     setActiveTab('profile');
     toast({
@@ -174,7 +171,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 overflow-x-hidden font-bold">
-      <header className="bg-white border-b px-4 py-4 sticky top-0 z-[100] shadow-sm safe-top">
+      <header className="bg-white border-b px-4 py-6 sticky top-0 z-[100] shadow-sm safe-top">
         <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
@@ -275,40 +272,46 @@ export default function HomePage() {
             onUpdateVaccine={(vId) => handleUpdateVaccine(selectedLamb.id, vId)}
           />
         )}
+
+        {activeTab === 'special-vaccines' && (
+          <SpecialVaccines 
+            lambs={lambs} 
+            onUpdateLambs={saveLambs} 
+          />
+        )}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-10 py-4 shadow-[0_-15px_50px_rgba(0,0,0,0.1)] safe-bottom">
+      <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-8 py-3 shadow-[0_-15px_50px_rgba(0,0,0,0.1)] safe-bottom">
         <nav className="max-w-md mx-auto flex justify-between items-center h-14">
           <button 
-            onClick={() => {
-              setSelectedLambId(null);
-              setActiveTab('list');
-            }}
-            className={`flex flex-col items-center gap-2 transition-all flex-1 ${activeTab === 'list' || (activeTab === 'profile' && !selectedLamb) ? 'text-primary' : 'text-slate-400'}`}
+            onClick={() => { setSelectedLambId(null); setActiveTab('list'); }}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <Home className={`h-8 w-8 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[12px] font-black uppercase tracking-widest">Sürü</span>
+            <Home className={`h-7 w-7 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[10px] font-black uppercase tracking-widest">Sürü</span>
           </button>
           
           <button 
-            onClick={() => {
-              setSelectedLambId(null);
-              setActiveTab('add');
-            }}
-            className="bg-primary text-white h-16 w-16 rounded-[1.5rem] flex items-center justify-center -mt-14 shadow-2xl shadow-primary/40 border-8 border-slate-50 active:scale-90 transition-all"
+            onClick={() => { setSelectedLambId(null); setActiveTab('health-assistant'); }}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <Plus className="h-10 w-10 stroke-[4]" />
+            <MessageCircle className={`h-7 w-7 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[10px] font-black uppercase tracking-widest">Rehber</span>
           </button>
 
           <button 
-            onClick={() => {
-              setSelectedLambId(null);
-              setActiveTab('health-assistant');
-            }}
-            className={`flex flex-col items-center gap-2 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
+            onClick={() => { setSelectedLambId(null); setActiveTab('add'); }}
+            className="bg-primary text-white h-14 w-14 rounded-[1.2rem] flex items-center justify-center -mt-10 shadow-2xl shadow-primary/40 border-6 border-slate-50 active:scale-90 transition-all mx-2"
           >
-            <MessageCircle className={`h-8 w-8 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[12px] font-black uppercase tracking-widest">Rehber</span>
+            <Plus className="h-8 w-8 stroke-[4]" />
+          </button>
+
+          <button 
+            onClick={() => { setSelectedLambId(null); setActiveTab('special-vaccines'); }}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'special-vaccines' ? 'text-primary' : 'text-slate-400'}`}
+          >
+            <Syringe className={`h-7 w-7 ${activeTab === 'special-vaccines' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[10px] font-black uppercase tracking-widest">Özel Aşı</span>
           </button>
         </nav>
       </div>
