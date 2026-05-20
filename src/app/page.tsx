@@ -325,19 +325,19 @@ export default function HomePage() {
       <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-4 py-2 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] safe-bottom">
         <nav className="max-w-md mx-auto flex justify-between items-center h-14">
           <button 
-            onClick={() => { setSelectedLambId(null); setActiveTab('health-assistant'); }}
-            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
-          >
-            <MessageCircle className={`h-5 w-5 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[8px] font-black uppercase tracking-tighter">Rehber</span>
-          </button>
-
-          <button 
             onClick={() => { setSelectedLambId(null); setActiveTab('home'); }}
             className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'home' ? 'text-primary' : 'text-slate-400'}`}
           >
             <LayoutDashboard className={`h-5 w-5 ${activeTab === 'home' ? 'fill-primary/10' : ''}`} />
             <span className="text-[8px] font-black uppercase tracking-tighter">Anasayfa</span>
+          </button>
+
+          <button 
+            onClick={() => { setSelectedLambId(null); setActiveTab('health-assistant'); }}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
+          >
+            <MessageCircle className={`h-5 w-5 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[8px] font-black uppercase tracking-tighter">Rehber</span>
           </button>
           
           <button 
