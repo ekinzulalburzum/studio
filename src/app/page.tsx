@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -16,14 +17,15 @@ import {
   Activity,
   Bell,
   Settings,
-  Syringe
+  Syringe,
+  LayoutDashboard
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<AppTab>('list');
+  const [activeTab, setActiveTab] = useState<AppTab>('home');
   const [lambs, setLambs] = useState<Lamb[]>([]);
   const [selectedLambId, setSelectedLambId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -169,7 +171,7 @@ export default function HomePage() {
   const selectedLamb = lambs.find(l => l.id === selectedLambId);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 overflow-x-hidden font-bold">
+    <div className="flex flex-col min-h-screen bg-slate-50 overflow-x-hidden">
       <header className="bg-white border-b px-4 py-3 sticky top-0 z-[100] shadow-sm safe-top">
         <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
           <div className="flex items-center gap-2">
@@ -177,8 +179,8 @@ export default function HomePage() {
               <Activity className="text-white h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-xl font-black text-slate-900 leading-tight">KuzuTakip</h1>
-              <p className="text-[9px] text-primary font-black uppercase tracking-widest">Sabah 08:00 Otomatik Kontrol</p>
+              <h1 className="text-lg font-black text-slate-900 leading-tight">KuzuTakip</h1>
+              <p className="text-[8px] text-primary font-black uppercase tracking-widest">SİSTEM AKTİF • 08:00</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -186,23 +188,23 @@ export default function HomePage() {
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-9 text-[10px] font-black px-3"
+                className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-8 text-[9px] font-black px-3"
                 onClick={requestPermission}
               >
-                <Bell className="h-4 w-4" /> Bildirim
+                <Bell className="h-4 w-4" /> BİLDİRİM
               </Button>
             )}
-            <Button size="icon" variant="ghost" className="rounded-full h-9 w-9">
-              <Settings className="h-5 w-5 text-slate-500" />
+            <Button size="icon" variant="ghost" className="rounded-full h-8 w-8">
+              <Settings className="h-4 w-4 text-slate-500" />
             </Button>
           </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-4xl mx-auto w-full pb-32">
-        {activeTab === 'list' && (
-          <div className="p-4 space-y-4 animate-fade-in">
-            <div className="grid grid-cols-3 gap-2">
+        {activeTab === 'home' && (
+          <div className="p-4 space-y-6 animate-fade-in">
+             <div className="grid grid-cols-3 gap-3">
               {[
                 { label: 'SÜRÜ', val: stats.total, color: 'text-slate-900' },
                 { label: 'AŞI', val: stats.pendingVaccines, color: 'text-destructive' },
@@ -210,18 +212,58 @@ export default function HomePage() {
               ].map((stat, i) => (
                 <Card key={i} className="border-none shadow-md rounded-2xl bg-white">
                   <CardContent className="p-4 flex flex-col items-center justify-center text-center">
-                    <span className={`text-3xl font-black ${stat.color}`}>{stat.val}</span>
-                    <span className="text-[10px] text-slate-400 font-black tracking-widest uppercase mt-1">{stat.label}</span>
+                    <span className={`text-2xl font-black ${stat.color}`}>{stat.val}</span>
+                    <span className="text-[9px] text-slate-400 font-black tracking-widest uppercase mt-1">{stat.label}</span>
                   </CardContent>
                 </Card>
               ))}
+            </div>
+
+            <Card className="border-none shadow-xl rounded-[2rem] bg-gradient-to-br from-primary to-emerald-600 text-white overflow-hidden">
+              <CardContent className="p-8">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="text-2xl font-black mb-1">Hoş Geldiniz!</h2>
+                    <p className="text-sm font-bold opacity-90 uppercase tracking-wider">Bugün her şey yolunda görünüyor.</p>
+                  </div>
+                  <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
+                    <Bell className="h-6 w-6" />
+                  </div>
+                </div>
+                <div className="mt-8 flex gap-3">
+                  <Button 
+                    className="flex-1 bg-white text-primary hover:bg-slate-100 font-black rounded-xl h-12"
+                    onClick={() => setActiveTab('add')}
+                  >
+                    <Plus className="mr-2 h-5 w-5" /> YENİ KAYIT
+                  </Button>
+                  <Button 
+                    variant="ghost"
+                    className="flex-1 bg-white/20 hover:bg-white/30 text-white font-black rounded-xl h-12"
+                    onClick={() => setActiveTab('list')}
+                  >
+                    LİSTEYE GİT
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeTab === 'list' && (
+          <div className="p-4 space-y-4 animate-fade-in">
+            <div className="flex justify-between items-center px-2">
+              <h2 className="text-2xl font-black text-slate-900">Sürü Listesi</h2>
+              <Button size="sm" className="rounded-full font-black gap-2 h-9 px-4" onClick={() => setActiveTab('add')}>
+                <Plus className="h-4 w-4" /> EKLE
+              </Button>
             </div>
 
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
               <input 
                 placeholder="İsim veya küpe no..." 
-                className="w-full pl-12 pr-4 h-14 bg-white border-2 border-slate-100 shadow-md rounded-xl focus:ring-4 focus:ring-primary/10 text-lg font-bold outline-none transition-all"
+                className="w-full pl-12 pr-4 h-12 bg-white border-2 border-slate-100 shadow-md rounded-xl focus:ring-4 focus:ring-primary/10 text-base font-bold outline-none transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -243,8 +285,8 @@ export default function HomePage() {
               </div>
             ) : (
               <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                <p className="text-slate-400 font-bold text-base uppercase tracking-widest">Kayıt Bulunamadı</p>
-                <Button variant="link" onClick={() => setActiveTab('add')} className="mt-2 text-primary text-lg font-black">Yeni Kayıt Başlat</Button>
+                <p className="text-slate-400 font-bold text-sm uppercase tracking-widest">Kayıt Bulunamadı</p>
+                <Button variant="link" onClick={() => setActiveTab('add')} className="mt-2 text-primary font-black">Yeni Kayıt Başlat</Button>
               </div>
             )}
           </div>
@@ -280,37 +322,38 @@ export default function HomePage() {
         )}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-6 py-2 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] safe-bottom">
+      <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-4 py-2 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] safe-bottom">
         <nav className="max-w-md mx-auto flex justify-between items-center h-14">
           <button 
             onClick={() => { setSelectedLambId(null); setActiveTab('health-assistant'); }}
-            className={`flex flex-col items-center gap-0.5 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <MessageCircle className={`h-6 w-6 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[9px] font-black uppercase tracking-tighter">Rehber</span>
+            <MessageCircle className={`h-5 w-5 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[8px] font-black uppercase tracking-tighter">Rehber</span>
           </button>
 
           <button 
-            onClick={() => { setSelectedLambId(null); setActiveTab('add'); }}
-            className="bg-primary text-white h-12 w-12 rounded-2xl flex items-center justify-center -mt-8 shadow-2xl shadow-primary/40 border-4 border-slate-50 active:scale-90 transition-all mx-4"
+            onClick={() => { setSelectedLambId(null); setActiveTab('home'); }}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'home' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <Plus className="h-7 w-7 stroke-[4]" />
+            <LayoutDashboard className={`h-5 w-5 ${activeTab === 'home' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[8px] font-black uppercase tracking-tighter">Anasayfa</span>
           </button>
           
           <button 
             onClick={() => { setSelectedLambId(null); setActiveTab('list'); }}
-            className={`flex flex-col items-center gap-0.5 transition-all flex-1 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <Home className={`h-6 w-6 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[9px] font-black uppercase tracking-tighter">Sürü</span>
+            <Home className={`h-5 w-5 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[8px] font-black uppercase tracking-tighter">Sürü</span>
           </button>
 
           <button 
             onClick={() => { setSelectedLambId(null); setActiveTab('special-vaccines'); }}
-            className={`flex flex-col items-center gap-0.5 transition-all flex-1 ${activeTab === 'special-vaccines' ? 'text-primary' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'special-vaccines' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <Syringe className={`h-6 w-6 ${activeTab === 'special-vaccines' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[9px] font-black uppercase tracking-tighter">Özel Aşı</span>
+            <Syringe className={`h-5 w-5 ${activeTab === 'special-vaccines' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[8px] font-black uppercase tracking-tighter">Özel Aşı</span>
           </button>
         </nav>
       </div>
