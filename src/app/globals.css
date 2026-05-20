@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
+    --background: 0 0% 100%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
@@ -46,7 +46,7 @@
   }
 }
 
-/* Turbopack ve Geliştirici İkonlarını Tamamen Gizle */
+/* Geliştirici İkonlarını ve Turbopack (N) Simgesini Tamamen Gizle */
 [data-turbopack-overlay],
 [data-nextjs-toast-wrapper],
 #nextjs-dev-overlay,

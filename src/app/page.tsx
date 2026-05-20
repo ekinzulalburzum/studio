@@ -26,24 +26,36 @@ export default function HomePage() {
   const [selectedLambId, setSelectedLambId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
+  const [lastCheckDate, setLastCheckDate] = useState<string | null>(null);
   const { toast } = useToast();
 
   const checkAndNotify = useCallback(() => {
     const today = new Date().toISOString().split('T')[0];
-    const savedLambs: Lamb[] = JSON.parse(localStorage.getItem('kuzu_data') || '[]');
     
+    // Günde sadece bir kez kontrol et
+    if (lastCheckDate === today) return;
+
+    const savedLambs: Lamb[] = JSON.parse(localStorage.getItem('kuzu_data') || '[]');
     const upcomingVaccines = savedLambs.flatMap(l => 
       l.vaccines.filter(v => !v.isCompleted && v.dueDate.startsWith(today)).map(v => ({...v, lambName: l.name}))
     );
 
-    if (upcomingVaccines.length > 0 && Notification.permission === 'granted') {
-      new Notification("KuzuTakip: Bugün Aşı Günü!", {
-        body: `${upcomingVaccines.length} adet kuzunun aşısı yapılacak.`,
-        icon: 'https://picsum.photos/seed/lamb-cute/100/100',
-        tag: 'vaccine-alert'
+    if (upcomingVaccines.length > 0) {
+      if (Notification.permission === 'granted') {
+        new Notification("KuzuTakip: Bugün Aşı Günü!", {
+          body: `${upcomingVaccines.length} adet kuzunun aşısı yapılacak.`,
+          icon: 'https://picsum.photos/seed/lamb-cute/100/100',
+        });
+      }
+      
+      toast({
+        title: "Günlük Aşı Kontrolü",
+        description: `Bugün yapılması gereken ${upcomingVaccines.length} aşı var!`,
       });
     }
-  }, []);
+
+    setLastCheckDate(today);
+  }, [lastCheckDate, toast]);
 
   useEffect(() => {
     const saved = localStorage.getItem('kuzu_data');
@@ -59,7 +71,7 @@ export default function HomePage() {
           birthTime: '09:00',
           photoUrl: 'https://picsum.photos/seed/lamb-cute/600/400',
           vaccines: [
-            { id: 'v1', name: 'Karma Aşı (Çelerme) 1. Doz', dueDate: new Date(Date.now() + 42 * 24 * 60 * 60 * 1000).toISOString(), isCompleted: false },
+            { id: 'v1', name: 'Karma Aşı (Çelerme) 1. Doz', dueDate: new Date().toISOString(), isCompleted: false },
           ]
         }
       ];
@@ -71,12 +83,16 @@ export default function HomePage() {
       setNotificationPermission(Notification.permission);
     }
 
+    // Her dakika kontrol et, saat 08:00 ise işlemi başlat
     const checkInterval = setInterval(() => {
       const now = new Date();
       if (now.getHours() === 8 && now.getMinutes() === 0) {
         checkAndNotify();
       }
     }, 60000);
+
+    // Uygulama ilk açıldığında da bir kontrol yap
+    checkAndNotify();
 
     return () => clearInterval(checkInterval);
   }, [checkAndNotify]);
@@ -88,7 +104,7 @@ export default function HomePage() {
       if (permission === 'granted') {
         toast({
           title: "Bildirimler Aktif",
-          description: "Aşı günü geldiğinde haber vereceğim.",
+          description: "Her sabah 08:00'de aşıları kontrol edeceğim.",
         });
         checkAndNotify();
       }
@@ -103,11 +119,12 @@ export default function HomePage() {
   const handleAddLamb = (newLamb: Lamb) => {
     const updated = [newLamb, ...lambs];
     saveLambs(updated);
+    // Kayıt sonrası doğrudan profil sayfasına yönlendir
     setSelectedLambId(newLamb.id);
     setActiveTab('profile');
     toast({
       title: "Başarıyla Kaydedildi",
-      description: `${newLamb.name} profili oluşturuldu.`,
+      description: `${newLamb.name} profili açılıyor...`,
     });
   };
 
@@ -156,66 +173,66 @@ export default function HomePage() {
   const selectedLamb = lambs.find(l => l.id === selectedLambId);
 
   return (
-    <div className="flex flex-col min-h-screen bg-transparent overflow-x-hidden">
-      <header className="bg-white/85 backdrop-blur-md border-b px-4 py-3 sticky top-0 z-[100] shadow-sm safe-top">
+    <div className="flex flex-col min-h-screen bg-slate-50 overflow-x-hidden font-bold">
+      <header className="bg-white border-b px-4 py-4 sticky top-0 z-[100] shadow-sm safe-top">
         <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
-              <Activity className="text-white h-7 w-7" />
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+              <Activity className="text-white h-8 w-8" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-slate-900 leading-tight">KuzuTakip</h1>
-              <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest">Sürü Yönetimi</p>
+              <h1 className="text-3xl font-black text-slate-900 leading-tight">KuzuTakip</h1>
+              <p className="text-[12px] text-primary font-black uppercase tracking-widest">Sabah 08:00 Otomatik Kontrol</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {notificationPermission !== 'granted' && (
               <Button 
-                size="sm" 
+                size="lg" 
                 variant="outline" 
-                className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-10 text-[12px] font-black px-4"
+                className="rounded-full gap-2 border-primary text-primary hover:bg-primary/5 h-12 text-sm font-black px-6"
                 onClick={requestPermission}
               >
-                <Bell className="h-5 w-5" /> Bildirim
+                <Bell className="h-6 w-6" /> Bildirim
               </Button>
             )}
-            <Button size="icon" variant="ghost" className="rounded-full h-11 w-11">
-              <Settings className="h-7 w-7 text-slate-500" />
+            <Button size="icon" variant="ghost" className="rounded-full h-12 w-12">
+              <Settings className="h-8 w-8 text-slate-500" />
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-4xl mx-auto w-full pb-24">
+      <main className="flex-1 max-w-4xl mx-auto w-full pb-32">
         {activeTab === 'list' && (
-          <div className="p-5 space-y-6 animate-fade-in">
+          <div className="p-6 space-y-8 animate-fade-in">
             <div className="grid grid-cols-3 gap-4">
               {[
                 { label: 'SÜRÜ', val: stats.total, color: 'text-slate-900' },
                 { label: 'AŞI', val: stats.pendingVaccines, color: 'text-destructive' },
                 { label: 'YENİ', val: stats.newborns, color: 'text-primary' }
               ].map((stat, i) => (
-                <Card key={i} className="border-none shadow-md rounded-[2rem] bg-white/95 backdrop-blur-sm">
-                  <CardContent className="p-6 flex flex-col items-center justify-center">
-                    <span className={`text-4xl font-black ${stat.color}`}>{stat.val}</span>
-                    <span className="text-[11px] text-slate-400 font-black tracking-widest uppercase mt-1">{stat.label}</span>
+                <Card key={i} className="border-none shadow-xl rounded-[2.5rem] bg-white">
+                  <CardContent className="p-8 flex flex-col items-center justify-center text-center">
+                    <span className={`text-5xl font-black ${stat.color}`}>{stat.val}</span>
+                    <span className="text-[13px] text-slate-400 font-black tracking-widest uppercase mt-2">{stat.label}</span>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-7 w-7 text-slate-400" />
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400" />
               <input 
-                placeholder="İsim veya küpe no ile ara..." 
-                className="w-full pl-14 pr-6 h-16 bg-white/95 border-none shadow-md rounded-[1.5rem] focus:ring-2 focus:ring-primary text-lg font-bold outline-none"
+                placeholder="İsim veya küpe no..." 
+                className="w-full pl-16 pr-8 h-20 bg-white border-2 border-slate-100 shadow-xl rounded-[2rem] focus:ring-4 focus:ring-primary/20 text-2xl font-black outline-none transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
             {filteredLambs.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredLambs.map(lamb => (
                   <KuzuCard 
                     key={lamb.id} 
@@ -229,9 +246,9 @@ export default function HomePage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-white/70 backdrop-blur-md rounded-[3rem] border-2 border-dashed border-slate-200">
-                <p className="text-slate-400 font-black text-base uppercase tracking-widest">Henüz kayıt yok</p>
-                <Button variant="link" onClick={() => setActiveTab('add')} className="mt-3 text-primary text-xl font-black">Yeni Kuzu Ekle</Button>
+              <div className="text-center py-24 bg-white rounded-[3rem] border-4 border-dashed border-slate-200">
+                <p className="text-slate-400 font-black text-xl uppercase tracking-widest">Kayıt Bulunamadı</p>
+                <Button variant="link" onClick={() => setActiveTab('add')} className="mt-4 text-primary text-2xl font-black">Yeni Kayıt Başlat</Button>
               </div>
             )}
           </div>
@@ -260,17 +277,17 @@ export default function HomePage() {
         )}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-8 py-2 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] safe-bottom">
-        <nav className="max-w-md mx-auto flex justify-between items-center h-12">
+      <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-white/95 backdrop-blur-xl border-t border-slate-100 px-10 py-4 shadow-[0_-15px_50px_rgba(0,0,0,0.1)] safe-bottom">
+        <nav className="max-w-md mx-auto flex justify-between items-center h-14">
           <button 
             onClick={() => {
               setSelectedLambId(null);
               setActiveTab('list');
             }}
-            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'list' || (activeTab === 'profile' && !selectedLamb) ? 'text-primary' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-2 transition-all flex-1 ${activeTab === 'list' || (activeTab === 'profile' && !selectedLamb) ? 'text-primary' : 'text-slate-400'}`}
           >
-            <Home className={`h-6 w-6 ${activeTab === 'list' ? 'fill-primary/5' : ''}`} />
-            <span className="text-[11px] font-black uppercase tracking-tighter">Sürü</span>
+            <Home className={`h-8 w-8 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[12px] font-black uppercase tracking-widest">Sürü</span>
           </button>
           
           <button 
@@ -278,9 +295,9 @@ export default function HomePage() {
               setSelectedLambId(null);
               setActiveTab('add');
             }}
-            className="bg-primary text-white h-12 w-12 rounded-2xl flex items-center justify-center -mt-12 shadow-xl shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all"
+            className="bg-primary text-white h-16 w-16 rounded-[1.5rem] flex items-center justify-center -mt-14 shadow-2xl shadow-primary/40 border-8 border-slate-50 active:scale-90 transition-all"
           >
-            <Plus className="h-8 w-8 stroke-[3]" />
+            <Plus className="h-10 w-10 stroke-[4]" />
           </button>
 
           <button 
@@ -288,10 +305,10 @@ export default function HomePage() {
               setSelectedLambId(null);
               setActiveTab('health-assistant');
             }}
-            className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
+            className={`flex flex-col items-center gap-2 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <MessageCircle className={`h-6 w-6 ${activeTab === 'health-assistant' ? 'fill-primary/5' : ''}`} />
-            <span className="text-[11px] font-black uppercase tracking-tighter">AI Rehber</span>
+            <MessageCircle className={`h-8 w-8 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
+            <span className="text-[12px] font-black uppercase tracking-widest">Rehber</span>
           </button>
         </nav>
       </div>

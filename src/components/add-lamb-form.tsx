@@ -137,32 +137,32 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
   };
 
   return (
-    <div className="max-w-xl mx-auto w-full px-6 py-8 animate-fade-in mb-32">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-4xl font-black text-slate-900 flex items-center gap-3">
-          <Sparkles className="h-10 w-10 text-primary" /> Yeni Kayıt
+    <div className="max-w-xl mx-auto w-full px-6 py-10 animate-fade-in mb-32">
+      <div className="flex items-center justify-between mb-10">
+        <h2 className="text-4xl font-black text-slate-900 flex items-center gap-4">
+          <Sparkles className="h-10 w-10 text-primary" /> Yeni Kuzu Ekle
         </h2>
-        <Button variant="ghost" size="icon" onClick={onCancel} className="rounded-full h-14 w-14">
-          <X className="h-10 w-10" />
+        <Button variant="ghost" size="icon" onClick={onCancel} className="rounded-full h-16 w-16">
+          <X className="h-12 w-12" />
         </Button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8 bg-white p-8 rounded-[3rem] shadow-2xl border border-slate-100">
+      <form onSubmit={handleSubmit} className="space-y-10 bg-white p-10 rounded-[3rem] shadow-2xl border border-slate-100">
         <div 
           onClick={handlePhotoClick}
-          className="relative flex flex-col items-center justify-center h-72 border-4 border-dashed border-slate-100 rounded-[2.5rem] bg-slate-50/50 overflow-hidden hover:bg-slate-50 transition-all cursor-pointer"
+          className="relative flex flex-col items-center justify-center h-80 border-4 border-dashed border-slate-100 rounded-[2.5rem] bg-slate-50/50 overflow-hidden hover:bg-slate-50 transition-all cursor-pointer"
         >
           {isCompressing ? (
             <div className="flex flex-col items-center gap-4">
               <Loader2 className="h-12 w-12 text-primary animate-spin" />
-              <p className="text-lg text-slate-400 font-black uppercase tracking-widest">Resim İşleniyor</p>
+              <p className="text-xl text-slate-400 font-black uppercase tracking-widest">İşleniyor</p>
             </div>
           ) : photoPreview ? (
             <Image src={photoPreview} alt="Preview" fill className="object-cover" />
           ) : (
             <>
-              <Camera className="h-16 w-16 text-slate-300 mb-4" />
-              <p className="text-lg text-slate-400 font-black uppercase tracking-widest text-center px-4">Fotoğraf Çek veya Yükle</p>
+              <Camera className="h-20 w-20 text-slate-300 mb-4" />
+              <p className="text-xl text-slate-400 font-black uppercase tracking-widest text-center px-6">Fotoğraf Çek</p>
             </>
           )}
           <input 
@@ -175,66 +175,66 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
           />
         </div>
 
-        <div className="space-y-4">
-          <Label htmlFor="name" className="text-xl font-black text-slate-500 uppercase tracking-widest ml-2">Kuzu Adı / Küpe No</Label>
+        <div className="space-y-6">
+          <Label htmlFor="name" className="text-2xl font-black text-slate-900 uppercase tracking-widest block">Kuzu Adı / Küpe No</Label>
           <Input 
             id="name" 
             placeholder="Örn: Pamuk" 
             value={name} 
             onChange={(e) => setName(e.target.value)}
             required
-            className="border-none bg-slate-100 focus-visible:ring-primary h-20 rounded-2xl text-3xl font-black px-8"
+            className="border-none bg-slate-100 focus-visible:ring-primary h-24 rounded-3xl text-4xl font-black px-10"
           />
         </div>
 
-        <div className="space-y-4">
-          <Label className="text-xl font-black text-slate-500 uppercase tracking-widest ml-2">Cinsiyet</Label>
+        <div className="space-y-6">
+          <Label className="text-2xl font-black text-slate-900 uppercase tracking-widest block">Cinsiyet</Label>
           <RadioGroup 
             value={gender} 
             onValueChange={(v: 'male' | 'female') => setGender(v)}
-            className="flex gap-4"
+            className="flex gap-6"
           >
-            <div className={`flex-1 h-20 rounded-2xl flex items-center justify-center border-4 transition-all cursor-pointer ${gender === 'female' ? 'border-primary bg-primary/10' : 'border-slate-100 bg-slate-50'}`} onClick={() => setGender('female')}>
+            <div className={`flex-1 h-24 rounded-3xl flex items-center justify-center border-4 transition-all cursor-pointer ${gender === 'female' ? 'border-primary bg-primary/10' : 'border-slate-100 bg-slate-50'}`} onClick={() => setGender('female')}>
               <RadioGroupItem value="female" id="female" className="hidden" />
-              <Label htmlFor="female" className="text-2xl font-black cursor-pointer">DİŞİ ♀</Label>
+              <Label htmlFor="female" className="text-3xl font-black cursor-pointer">DİŞİ ♀</Label>
             </div>
-            <div className={`flex-1 h-20 rounded-2xl flex items-center justify-center border-4 transition-all cursor-pointer ${gender === 'male' ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-slate-50'}`} onClick={() => setGender('male')}>
+            <div className={`flex-1 h-24 rounded-3xl flex items-center justify-center border-4 transition-all cursor-pointer ${gender === 'male' ? 'border-blue-500 bg-blue-50' : 'border-slate-100 bg-slate-50'}`} onClick={() => setGender('male')}>
               <RadioGroupItem value="male" id="male" className="hidden" />
-              <Label htmlFor="male" className="text-2xl font-black cursor-pointer text-blue-700">ERKEK ♂</Label>
+              <Label htmlFor="male" className="text-3xl font-black cursor-pointer text-blue-700">ERKEK ♂</Label>
             </div>
           </RadioGroup>
         </div>
 
-        <div className="grid grid-cols-1 gap-6">
-          <div className="space-y-4">
-            <Label htmlFor="date" className="text-xl font-black text-slate-500 uppercase tracking-widest ml-2">Doğum Tarihi</Label>
+        <div className="grid grid-cols-1 gap-8">
+          <div className="space-y-6">
+            <Label htmlFor="date" className="text-2xl font-black text-slate-900 uppercase tracking-widest block">Doğum Tarihi</Label>
             <Input 
               id="date" 
               type="date" 
               value={birthDate} 
               onChange={(e) => setBirthDate(e.target.value)}
-              className="border-none bg-slate-100 focus-visible:ring-primary h-20 rounded-2xl text-2xl font-black px-8"
+              className="border-none bg-slate-100 focus-visible:ring-primary h-24 rounded-3xl text-3xl font-black px-10"
             />
           </div>
-          <div className="space-y-4">
-            <Label htmlFor="time" className="text-xl font-black text-slate-500 uppercase tracking-widest ml-2">Doğum Saati</Label>
+          <div className="space-y-6">
+            <Label htmlFor="time" className="text-2xl font-black text-slate-900 uppercase tracking-widest block">Doğum Saati</Label>
             <Input 
               id="time" 
               type="time" 
               value={birthTime} 
               onChange={(e) => setBirthTime(e.target.value)}
-              className="border-none bg-slate-100 focus-visible:ring-primary h-20 rounded-2xl text-2xl font-black px-8"
+              className="border-none bg-slate-100 focus-visible:ring-primary h-24 rounded-3xl text-3xl font-black px-10"
             />
           </div>
         </div>
 
-        <div className="pt-6">
+        <div className="pt-8">
           <Button 
             type="submit" 
             disabled={isCompressing || !birthDate}
-            className="w-full bg-primary hover:bg-primary/90 h-24 text-3xl font-black rounded-[2rem] shadow-2xl shadow-primary/30 transition-all active:scale-95"
+            className="w-full bg-primary hover:bg-primary/90 h-28 text-4xl font-black rounded-[2.5rem] shadow-2xl shadow-primary/30 transition-all active:scale-95"
           >
-            <Save className="mr-4 h-10 w-10" /> KAYDI TAMAMLA
+            <Save className="mr-6 h-12 w-12" /> KAYDI TAMAMLA
           </Button>
         </div>
       </form>
