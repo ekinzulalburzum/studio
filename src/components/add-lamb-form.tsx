@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,13 +16,19 @@ interface AddLambFormProps {
 
 export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
   const [name, setName] = useState('');
-  const [birthDate, setBirthDate] = useState(format(new Date(), 'yyyy-MM-dd'));
-  const [birthTime, setBirthTime] = useState(format(new Date(), 'HH:mm'));
+  const [birthDate, setBirthDate] = useState('');
+  const [birthTime, setBirthTime] = useState('');
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Veteriner Standartlarına Uygun Aşı Takvimi
+  // Hydration hatasını önlemek için tarihleri useEffect içinde başlatıyoruz
+  useEffect(() => {
+    const now = new Date();
+    setBirthDate(format(now, 'yyyy-MM-dd'));
+    setBirthTime(format(now, 'HH:mm'));
+  }, []);
+
   const generateDefaultVaccines = (bDate: string): Vaccine[] => {
     const baseDate = new Date(bDate);
     return [
@@ -62,7 +68,7 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (event) => {
-        const img = new (window as any).Image();
+        const img = new window.Image();
         img.src = event.target?.result as string;
         img.onload = () => {
           const canvas = document.createElement('canvas');
@@ -88,7 +94,6 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
           const ctx = canvas.getContext('2d');
           ctx?.drawImage(img, 0, 0, width, height);
           
-          // Kvaliteyi %60'a düşürerek JPEG olarak sıkıştır
           const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
           resolve(compressedDataUrl);
         };
@@ -115,7 +120,7 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || isCompressing) return;
+    if (!name.trim() || isCompressing || !birthDate) return;
 
     const newLamb: Lamb = {
       id: Math.random().toString(36).substr(2, 6).toUpperCase(),
@@ -206,7 +211,7 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
         <div className="pt-2">
           <Button 
             type="submit" 
-            disabled={isCompressing}
+            disabled={isCompressing || !birthDate}
             className="w-full bg-primary hover:bg-primary/90 h-14 text-base font-bold rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95"
           >
             <Save className="mr-2 h-5 w-5" /> Kaydı Tamamla

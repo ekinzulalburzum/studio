@@ -45,20 +45,12 @@
   }
 }
 
-/* KESİN ÇÖZÜM: Tüm geliştirici araçlarını ve Next.js overlay'lerini tamamen yok et */
-#nextjs-portal,
-nextjs-portal,
-[data-nextjs-toast-wrapper],
+/* Turbopack ve Geliştirici İkonlarını Gizle */
 [data-turbopack-overlay],
-#nextjs-dev-overlay,
-.__next_static_deprecation_messaging,
-div[style*="z-index: 2147483647"] {
+#nextjs-dev-overlay {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
-  pointer-events: none !important;
-  width: 0 !important;
-  height: 0 !important;
 }
 
 @keyframes fade-in {
