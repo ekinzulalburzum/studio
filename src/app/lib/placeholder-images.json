@@ -1,0 +1,34 @@
+{
+  "placeholderImages": [
+    {
+      "id": "lamb-1",
+      "description": "A cute newborn lamb in a grassy field",
+      "imageUrl": "https://picsum.photos/seed/lamb1/600/400",
+      "imageHint": "newborn lamb"
+    },
+    {
+      "id": "lamb-2",
+      "description": "Twin lambs standing together",
+      "imageUrl": "https://picsum.photos/seed/lamb2/600/400",
+      "imageHint": "twin lambs"
+    },
+    {
+      "id": "lamb-3",
+      "description": "Lamb feeding in the barn",
+      "imageUrl": "https://picsum.photos/seed/lamb3/600/400",
+      "imageHint": "lamb feeding"
+    },
+    {
+      "id": "farm-bg",
+      "description": "Scenic green farm background",
+      "imageUrl": "https://picsum.photos/seed/farm/1200/800",
+      "imageHint": "green farm"
+    },
+    {
+      "id": "sheep-pattern",
+      "description": "Subtle sheep flock background",
+      "imageUrl": "https://picsum.photos/seed/sheep-pasture/1200/800",
+      "imageHint": "sheep flock"
+    }
+  ]
+}

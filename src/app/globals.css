@@ -45,7 +45,7 @@
     position: relative;
   }
 
-  /* Arka plan koyun görseli - Görünürlük artırıldı */
+  /* Arka plan koyun görseli - İnsan olmayan saf koyun görseli ile güncellendi */
   body::before {
     content: "";
     position: fixed;
@@ -53,10 +53,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://picsum.photos/seed/sheepflock/1200/800');
+    background-image: url('https://picsum.photos/seed/sheep-pasture/1200/800');
     background-size: cover;
     background-position: center;
-    opacity: 0.12; /* Opasite 0.04'ten 0.12'ye çıkarıldı */
+    opacity: 0.16; /* Görünürlük daha belirgin yapıldı */
     z-index: -1;
     pointer-events: none;
   }
@@ -74,7 +74,11 @@ nextjs-portal,
 [data-nextjs-dev-overlay],
 [data-nextjs-scroll-focus-boundary],
 .nextjs-toast-errors-parent,
-.nextjs-static-indicator {
+.nextjs-static-indicator,
+div[class*="Turbopack"],
+div[id*="Turbopack"],
+div[class*="Nextjs"],
+div[id*="Nextjs"] {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
