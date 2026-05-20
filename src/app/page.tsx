@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { KuzuCard } from '@/components/kuzu-card';
 import { AddLambForm } from '@/components/add-lamb-form';
 import { HealthAssistant } from '@/components/health-assistant';
@@ -18,11 +18,15 @@ import {
   Bell,
   Settings,
   Syringe,
-  LayoutDashboard
+  LayoutDashboard,
+  Calendar,
+  ChevronRight
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { Card, CardContent } from '@/components/ui/card';
+import { format, isAfter, startOfDay } from 'date-fns';
+import { tr } from 'date-fns/locale';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<AppTab>('home');
@@ -168,6 +172,16 @@ export default function HomePage() {
     }).length
   };
 
+  const approachingVaccines = useMemo(() => {
+    const today = startOfDay(new Date());
+    return lambs.flatMap(l => 
+      l.vaccines
+        .filter(v => !v.isCompleted)
+        .map(v => ({ ...v, lambName: l.name, lambId: l.id }))
+    ).sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+    .slice(0, 5);
+  }, [lambs]);
+
   const selectedLamb = lambs.find(l => l.id === selectedLambId);
 
   return (
@@ -247,6 +261,39 @@ export default function HomePage() {
                 </div>
               </CardContent>
             </Card>
+
+            <div className="space-y-4">
+              <h3 className="text-xl font-black text-slate-900 ml-2 flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-primary" /> Yaklaşan Aşılar
+              </h3>
+              {approachingVaccines.length > 0 ? (
+                <div className="space-y-3">
+                  {approachingVaccines.map((v) => (
+                    <Card key={v.id} className="border-none shadow-sm rounded-2xl bg-white hover:bg-slate-50 cursor-pointer transition-colors" onClick={() => { setSelectedLambId(v.lambId); setActiveTab('profile'); }}>
+                      <CardContent className="p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="bg-primary/10 p-2 rounded-xl">
+                            <Syringe className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="font-black text-slate-900 text-sm">{v.lambName}</h4>
+                            <p className="text-[10px] font-bold text-slate-500 uppercase">{v.name}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[10px] font-black text-primary uppercase">{format(new Date(v.dueDate), 'dd MMM', { locale: tr })}</p>
+                          <ChevronRight className="h-4 w-4 text-slate-300 ml-auto mt-1" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 bg-white rounded-3xl border-2 border-dashed border-slate-100">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Planlı Aşı Bulunmuyor</p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -329,7 +376,7 @@ export default function HomePage() {
             className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'home' ? 'text-primary' : 'text-slate-400'}`}
           >
             <LayoutDashboard className={`h-5 w-5 ${activeTab === 'home' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[8px] font-black uppercase tracking-tighter">Anasayfa</span>
+            <span className="text-[9px] font-bold uppercase tracking-tighter">Anasayfa</span>
           </button>
 
           <button 
@@ -337,7 +384,7 @@ export default function HomePage() {
             className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
           >
             <MessageCircle className={`h-5 w-5 ${activeTab === 'health-assistant' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[8px] font-black uppercase tracking-tighter">Rehber</span>
+            <span className="text-[9px] font-bold uppercase tracking-tighter">Rehber</span>
           </button>
           
           <button 
@@ -345,7 +392,7 @@ export default function HomePage() {
             className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'list' ? 'text-primary' : 'text-slate-400'}`}
           >
             <Home className={`h-5 w-5 ${activeTab === 'list' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[8px] font-black uppercase tracking-tighter">Sürü</span>
+            <span className="text-[9px] font-bold uppercase tracking-tighter">Sürü</span>
           </button>
 
           <button 
@@ -353,7 +400,7 @@ export default function HomePage() {
             className={`flex flex-col items-center gap-1 transition-all flex-1 ${activeTab === 'special-vaccines' ? 'text-primary' : 'text-slate-400'}`}
           >
             <Syringe className={`h-5 w-5 ${activeTab === 'special-vaccines' ? 'fill-primary/10' : ''}`} />
-            <span className="text-[8px] font-black uppercase tracking-tighter">Özel Aşı</span>
+            <span className="text-[9px] font-bold uppercase tracking-tighter">Özel Aşı</span>
           </button>
         </nav>
       </div>
