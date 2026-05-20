@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -22,7 +23,6 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
   const [isCompressing, setIsCompressing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Hydration hatasını önlemek için tarihleri useEffect içinde başlatıyoruz
   useEffect(() => {
     const now = new Date();
     setBirthDate(format(now, 'yyyy-MM-dd'));
@@ -135,32 +135,32 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
   };
 
   return (
-    <div className="max-w-md mx-auto w-full px-4 py-6 animate-fade-in mb-24">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-primary" /> Yeni Kuzu Kaydı
+    <div className="max-w-md mx-auto w-full px-4 py-4 animate-fade-in mb-24">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary" /> Yeni Kayıt
         </h2>
-        <Button variant="ghost" size="icon" onClick={onCancel} className="rounded-full">
-          <X className="h-5 w-5" />
+        <Button variant="ghost" size="icon" onClick={onCancel} className="rounded-full h-8 w-8">
+          <X className="h-4 w-4" />
         </Button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
         <div 
           onClick={handlePhotoClick}
-          className="relative flex flex-col items-center justify-center h-48 border-2 border-dashed border-slate-200 rounded-[1.5rem] bg-slate-50 overflow-hidden hover:bg-slate-100 transition-all cursor-pointer"
+          className="relative flex flex-col items-center justify-center h-40 border-2 border-dashed border-slate-100 rounded-2xl bg-slate-50/50 overflow-hidden hover:bg-slate-50 transition-all cursor-pointer"
         >
           {isCompressing ? (
             <div className="flex flex-col items-center gap-2">
-              <Loader2 className="h-8 w-8 text-primary animate-spin" />
-              <p className="text-xs text-slate-400 font-bold">Resim İşleniyor...</p>
+              <Loader2 className="h-6 w-6 text-primary animate-spin" />
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Resim İşleniyor</p>
             </div>
           ) : photoPreview ? (
             <Image src={photoPreview} alt="Preview" fill className="object-cover" />
           ) : (
             <>
-              <Camera className="h-8 w-8 text-slate-300 mb-2" />
-              <p className="text-xs text-slate-400 font-bold">Fotoğraf Çek veya Seç</p>
+              <Camera className="h-6 w-6 text-slate-300 mb-2" />
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Fotoğraf Çek</p>
             </>
           )}
           <input 
@@ -173,37 +173,37 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="name" className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">İsim veya Küpe Numarası</Label>
+        <div className="space-y-1.5">
+          <Label htmlFor="name" className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Kuzu Adı / Küpe No</Label>
           <Input 
             id="name" 
             placeholder="Örn: Pamuk" 
             value={name} 
             onChange={(e) => setName(e.target.value)}
             required
-            className="border-none bg-slate-50 focus-visible:ring-primary h-12 rounded-xl font-medium px-4"
+            className="border-none bg-slate-50 focus-visible:ring-primary h-10 rounded-lg text-xs font-medium px-3"
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="date" className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Doğum Tarihi</Label>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="date" className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Doğum Tarihi</Label>
             <Input 
               id="date" 
               type="date" 
               value={birthDate} 
               onChange={(e) => setBirthDate(e.target.value)}
-              className="border-none bg-slate-50 focus-visible:ring-primary h-12 rounded-xl px-4"
+              className="border-none bg-slate-50 focus-visible:ring-primary h-10 rounded-lg text-xs px-3"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="time" className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Saat</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="time" className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Saat</Label>
             <Input 
               id="time" 
               type="time" 
               value={birthTime} 
               onChange={(e) => setBirthTime(e.target.value)}
-              className="border-none bg-slate-50 focus-visible:ring-primary h-12 rounded-xl px-4"
+              className="border-none bg-slate-50 focus-visible:ring-primary h-10 rounded-lg text-xs px-3"
             />
           </div>
         </div>
@@ -212,22 +212,12 @@ export function AddLambForm({ onAdd, onCancel }: AddLambFormProps) {
           <Button 
             type="submit" 
             disabled={isCompressing || !birthDate}
-            className="w-full bg-primary hover:bg-primary/90 h-14 text-base font-bold rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95"
+            className="w-full bg-primary hover:bg-primary/90 h-11 text-xs font-bold rounded-lg shadow-md transition-all active:scale-95"
           >
-            <Save className="mr-2 h-5 w-5" /> Kaydı Tamamla
+            <Save className="mr-2 h-4 w-4" /> Kaydı Tamamla
           </Button>
         </div>
       </form>
-      
-      <div className="mt-6 p-4 bg-emerald-50 rounded-2xl flex gap-3 border border-emerald-100">
-        <Syringe className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-        <div className="space-y-1">
-          <h4 className="text-xs font-bold text-emerald-900">Otomatik Aşı Takvimi</h4>
-          <p className="text-[10px] text-emerald-700/80 leading-relaxed font-medium">
-            Kuzunuz için Karma, Zatürre ve Şap aşıları veterinerlik standartlarına göre otomatik planlanır.
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
