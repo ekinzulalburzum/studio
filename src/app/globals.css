@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -46,7 +45,7 @@
     position: relative;
   }
 
-  /* Arka plan silik koyun görseli */
+  /* Arka plan koyun görseli - Görünürlük artırıldı */
   body::before {
     content: "";
     position: fixed;
@@ -57,14 +56,14 @@
     background-image: url('https://picsum.photos/seed/sheepflock/1200/800');
     background-size: cover;
     background-position: center;
-    opacity: 0.04;
+    opacity: 0.12; /* Opasite 0.04'ten 0.12'ye çıkarıldı */
     z-index: -1;
     pointer-events: none;
   }
 }
 
 /* 
-   KESİN ÇÖZÜM: Tüm Next.js ve Turbopack Geliştirici Arayüzlerini Gizle 
+   KESİN ÇÖZÜM: Tüm Next.js ve Turbopack Geliştirici Arayüzlerini (N simgesi dahil) Gizle 
 */
 [data-turbopack-overlay],
 [data-nextjs-toast-wrapper],
@@ -73,7 +72,9 @@
 #nextjs-error-feedback-overlay,
 nextjs-portal,
 [data-nextjs-dev-overlay],
-[data-nextjs-scroll-focus-boundary] {
+[data-nextjs-scroll-focus-boundary],
+.nextjs-toast-errors-parent,
+.nextjs-static-indicator {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
