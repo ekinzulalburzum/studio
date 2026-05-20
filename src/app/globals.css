@@ -4,7 +4,8 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* Hafif koyu / Slate teması */
+    --background: 210 20% 96%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
@@ -12,16 +13,16 @@
     --popover-foreground: 222 47% 11%;
     --primary: 142 76% 36%;
     --primary-foreground: 355 100% 100%;
-    --secondary: 142 30% 96%;
+    --secondary: 210 20% 90%;
     --secondary-foreground: 142 76% 20%;
-    --muted: 210 40% 96%;
+    --muted: 210 20% 92%;
     --muted-foreground: 215 16% 47%;
     --accent: 142 76% 45%;
     --accent-foreground: 355 100% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
+    --border: 214 32% 85%;
+    --input: 214 32% 85%;
     --ring: 142 76% 36%;
     --radius: 1.5rem;
   }
@@ -38,7 +39,8 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased text-lg font-bold; 
+    /* Yazı boyutu 1px artırıldı: 18px -> 19px */
+    @apply bg-background text-foreground font-body antialiased text-[19px] font-bold; 
     overscroll-behavior-y: none;
     overflow-x: hidden;
     position: relative;
@@ -59,7 +61,6 @@ nextjs-portal,
 .nextjs-static-indicator,
 div[class*="Turbopack"],
 div[id*="Turbopack"],
-div[class*="Nextjs"],
 div[id*="Nextjs"],
 button[aria-label="Turbopack status"],
 [data-nextjs-dev-overlay-button] {

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
@@ -185,8 +184,8 @@ export default function HomePage() {
   const selectedLamb = lambs.find(l => l.id === selectedLambId);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 overflow-x-hidden">
-      <header className="bg-white border-b px-4 py-3 sticky top-0 z-[100] shadow-sm safe-top">
+    <div className="flex flex-col min-h-screen bg-background overflow-x-hidden">
+      <header className="bg-white/80 backdrop-blur-md border-b px-4 py-3 sticky top-0 z-[100] shadow-sm safe-top">
         <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
