@@ -49,7 +49,7 @@ export function KuzuCard({ lamb, onSelect, onDelete }: KuzuCardProps) {
           />
           {isVaccineNear && (
             <div className="absolute top-2 right-2 bg-destructive text-white p-1.5 rounded-full shadow-sm animate-pulse">
-              <Bell className="h-3 w-3" />
+              <Bell className="h-4 w-4" />
             </div>
           )}
         </div>
@@ -58,9 +58,9 @@ export function KuzuCard({ lamb, onSelect, onDelete }: KuzuCardProps) {
         <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
           <div>
             <div className="flex justify-between items-start">
-              <h3 className="text-lg font-black text-slate-900 truncate pr-1">{lamb.name}</h3>
+              <h3 className="text-xl font-black text-slate-900 truncate pr-1">{lamb.name}</h3>
               <div className="flex items-center gap-1.5">
-                <Badge variant="outline" className="text-[10px] font-black border-slate-200 text-slate-500 rounded-lg px-2 py-0.5 h-5">
+                <Badge variant="outline" className="text-[11px] font-black border-slate-200 text-slate-500 rounded-lg px-2 py-0.5 h-6">
                   #{lamb.id.slice(0, 4)}
                 </Badge>
                 
@@ -69,10 +69,10 @@ export function KuzuCard({ lamb, onSelect, onDelete }: KuzuCardProps) {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="h-7 w-7 text-slate-300 hover:text-destructive hover:bg-destructive/5"
+                      className="h-8 w-8 text-slate-300 hover:text-destructive hover:bg-destructive/5"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-5 w-5" />
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent onClick={(e) => e.stopPropagation()}>
@@ -92,12 +92,12 @@ export function KuzuCard({ lamb, onSelect, onDelete }: KuzuCardProps) {
             </div>
             
             <div className="mt-2 space-y-1">
-              <div className="flex items-center gap-2 text-[12px] font-medium text-slate-600">
-                <Calendar className="h-3.5 w-3.5 text-primary" />
+              <div className="flex items-center gap-2 text-[14px] font-bold text-slate-700">
+                <Calendar className="h-4 w-4 text-primary" />
                 <span>{format(new Date(lamb.birthDate), 'dd MMMM yyyy', { locale: tr })}</span>
               </div>
-              <div className="flex items-center gap-2 text-[12px] font-medium text-slate-600">
-                <Clock className="h-3.5 w-3.5 text-primary" />
+              <div className="flex items-center gap-2 text-[14px] font-bold text-slate-700">
+                <Clock className="h-4 w-4 text-primary" />
                 <span>{lamb.birthTime}</span>
               </div>
             </div>
@@ -105,13 +105,13 @@ export function KuzuCard({ lamb, onSelect, onDelete }: KuzuCardProps) {
           
           <div className="mt-3">
             {upcomingVaccine ? (
-              <div className={`px-3 py-1.5 rounded-xl flex items-center gap-2 text-[10px] font-black uppercase tracking-tight ${isVaccineNear ? 'bg-destructive/10 text-destructive' : 'bg-slate-100 text-slate-600'}`}>
-                <Syringe className="h-4 w-4" />
+              <div className={`px-3 py-2 rounded-xl flex items-center gap-2 text-[11px] font-black uppercase tracking-tight ${isVaccineNear ? 'bg-destructive/10 text-destructive' : 'bg-slate-100 text-slate-600'}`}>
+                <Syringe className="h-5 w-5" />
                 <span className="truncate">{upcomingVaccine.name} • {format(new Date(upcomingVaccine.dueDate), 'dd MMM', { locale: tr })}</span>
               </div>
             ) : (
-              <div className="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-600 flex items-center gap-2 text-[10px] font-black uppercase tracking-tight">
-                <Syringe className="h-4 w-4" />
+              <div className="px-3 py-2 rounded-xl bg-emerald-50 text-emerald-600 flex items-center gap-2 text-[11px] font-black uppercase tracking-tight">
+                <Syringe className="h-5 w-5" />
                 <span>Tüm Aşılar Tamam</span>
               </div>
             )}

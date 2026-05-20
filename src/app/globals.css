@@ -39,7 +39,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased text-base;
+    @apply bg-background text-foreground font-body antialiased text-lg;
     overscroll-behavior-y: none;
     overflow-x: hidden;
     position: relative;
@@ -52,16 +52,16 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://picsum.photos/seed/sheep-pasture/1200/800');
+    background-image: url('https://picsum.photos/seed/lamb1/1200/800');
     background-size: cover;
     background-position: center;
-    opacity: 0.28; /* Görünürlük belirgin şekilde artırıldı */
+    opacity: 0.38;
     z-index: -1;
     pointer-events: none;
   }
 }
 
-/* Tüm geliştirici arayüzlerini gizle */
+/* Tüm geliştirici arayüzlerini ve Turbopack ikonunu kesin olarak gizle */
 [data-turbopack-overlay],
 [data-nextjs-toast-wrapper],
 #nextjs-dev-overlay,
