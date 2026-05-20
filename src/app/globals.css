@@ -39,7 +39,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased text-xl;
+    @apply bg-background text-foreground font-body antialiased text-2xl; /* Metin boyutları büyütüldü */
     overscroll-behavior-y: none;
     overflow-x: hidden;
     position: relative;
@@ -52,16 +52,16 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://picsum.photos/seed/lamb-cute/1200/800');
+    background-image: url('https://picsum.photos/seed/lamb-sheep/1200/800');
     background-size: cover;
     background-position: center;
-    opacity: 0.45;
+    opacity: 0.55; /* Daha belirgin kuzu resmi */
     z-index: -1;
     pointer-events: none;
   }
 }
 
-/* Turbopack ve Geliştirici İkonlarını Tamamen Gizle */
+/* Turbopack ve NextJS Geliştirici İkonlarını Tamamen Gizle */
 [data-turbopack-overlay],
 [data-nextjs-toast-wrapper],
 #nextjs-dev-overlay,

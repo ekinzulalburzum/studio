@@ -20,14 +20,14 @@
     },
     {
       "id": "farm-bg",
-      "description": "Scenic green farm background",
-      "imageUrl": "https://picsum.photos/seed/farm/1200/800",
-      "imageHint": "green farm"
+      "description": "Scenic green farm background with lambs",
+      "imageUrl": "https://picsum.photos/seed/lamb-sheep/1200/800",
+      "imageHint": "lamb sheep"
     },
     {
       "id": "sheep-pattern",
       "description": "Subtle sheep flock background",
-      "imageUrl": "https://picsum.photos/seed/sheep-pasture/1200/800",
+      "imageUrl": "https://picsum.photos/seed/sheepflock/1200/800",
       "imageHint": "sheep flock"
     }
   ]
