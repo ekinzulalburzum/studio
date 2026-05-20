@@ -38,7 +38,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased text-2xl font-bold; 
+    @apply bg-background text-foreground font-body antialiased text-xl font-bold; 
     overscroll-behavior-y: none;
     overflow-x: hidden;
     position: relative;
@@ -46,7 +46,7 @@
   }
 }
 
-/* Geliştirici İkonlarını ve Turbopack (N) Simgesini Tamamen Gizle */
+/* Geliştirici İkonlarını Tamamen Gizle */
 [data-turbopack-overlay],
 [data-nextjs-toast-wrapper],
 #nextjs-dev-overlay,
