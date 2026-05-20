@@ -9,6 +9,7 @@ export interface Vaccine {
 export interface Lamb {
   id: string;
   name: string;
+  gender: 'male' | 'female';
   birthDate: string; // ISO string
   birthTime: string; // HH:mm
   photoUrl: string;
