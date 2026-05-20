@@ -104,7 +104,6 @@ export default function HomePage() {
   const handleAddLamb = (newLamb: Lamb) => {
     const updated = [newLamb, ...lambs];
     saveLambs(updated);
-    // Kuzu eklendiğinde direkt profiline git
     setSelectedLambId(newLamb.id);
     setActiveTab('profile');
     toast({
@@ -159,9 +158,9 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-transparent overflow-x-hidden">
       {/* Header */}
-      <header className="bg-white border-b px-4 py-2 sticky top-0 z-[100] shadow-sm safe-top">
+      <header className="bg-white/80 backdrop-blur-md border-b px-4 py-2 sticky top-0 z-[100] shadow-sm safe-top">
         <div className="flex justify-between items-center max-w-4xl mx-auto w-full">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
@@ -199,7 +198,7 @@ export default function HomePage() {
                 { label: 'AŞI', val: stats.pendingVaccines, color: 'text-destructive' },
                 { label: 'YENİ', val: stats.newborns, color: 'text-primary' }
               ].map((stat, i) => (
-                <Card key={i} className="border-none shadow-sm rounded-xl bg-white">
+                <Card key={i} className="border-none shadow-sm rounded-xl bg-white/90">
                   <CardContent className="p-2 flex flex-col items-center justify-center">
                     <span className={`text-lg font-black ${stat.color}`}>{stat.val}</span>
                     <span className="text-[7px] text-slate-400 font-black tracking-widest">{stat.label}</span>
@@ -212,7 +211,7 @@ export default function HomePage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input 
                 placeholder="Arama..." 
-                className="pl-9 h-10 bg-white border-none shadow-sm rounded-lg focus-visible:ring-primary text-xs font-medium"
+                className="pl-9 h-10 bg-white/90 border-none shadow-sm rounded-lg focus-visible:ring-primary text-xs font-medium"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -233,7 +232,7 @@ export default function HomePage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 bg-white rounded-2xl border-2 border-dashed border-slate-100">
+              <div className="text-center py-12 bg-white/60 backdrop-blur-sm rounded-2xl border-2 border-dashed border-slate-100">
                 <p className="text-slate-400 font-bold text-[10px] uppercase tracking-wider">Kayıt Bulunamadı</p>
                 <Button variant="link" onClick={() => setActiveTab('add')} className="mt-1 text-primary text-xs">Kuzu Ekle</Button>
               </div>
@@ -274,7 +273,7 @@ export default function HomePage() {
             }}
             className={`flex flex-col items-center gap-0.5 transition-all flex-1 ${activeTab === 'list' || activeTab === 'profile' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <Home className={`h-5 w-5 ${activeTab === 'list' || activeTab === 'profile' ? 'fill-primary/5' : ''}`} />
+            <Home className={`h-4.5 w-4.5 ${activeTab === 'list' || activeTab === 'profile' ? 'fill-primary/5' : ''}`} />
             <span className="text-[7px] font-black uppercase tracking-tighter">Sürü</span>
           </button>
           
@@ -283,9 +282,9 @@ export default function HomePage() {
               setSelectedLambId(null);
               setActiveTab('add');
             }}
-            className="bg-primary text-white h-11 w-11 rounded-full flex items-center justify-center -mt-8 shadow-lg shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all"
+            className="bg-primary text-white h-10 w-10 rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-primary/30 border-4 border-slate-50 active:scale-90 transition-all"
           >
-            <Plus className="h-6 w-6 stroke-[3]" />
+            <Plus className="h-5 w-5 stroke-[3]" />
           </button>
 
           <button 
@@ -295,7 +294,7 @@ export default function HomePage() {
             }}
             className={`flex flex-col items-center gap-0.5 transition-all flex-1 ${activeTab === 'health-assistant' ? 'text-primary' : 'text-slate-400'}`}
           >
-            <MessageCircle className={`h-5 w-5 ${activeTab === 'health-assistant' ? 'fill-primary/5' : ''}`} />
+            <MessageCircle className={`h-4.5 w-4.5 ${activeTab === 'health-assistant' ? 'fill-primary/5' : ''}`} />
             <span className="text-[7px] font-black uppercase tracking-tighter">AI Rehber</span>
           </button>
         </nav>

@@ -23,6 +23,12 @@
       "description": "Scenic green farm background",
       "imageUrl": "https://picsum.photos/seed/farm/1200/800",
       "imageHint": "green farm"
+    },
+    {
+      "id": "sheep-pattern",
+      "description": "Subtle sheep flock background",
+      "imageUrl": "https://picsum.photos/seed/sheepflock/1200/800",
+      "imageHint": "sheep flock"
     }
   ]
 }
