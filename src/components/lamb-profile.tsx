@@ -51,59 +51,57 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
   }, [lamb.id, completedVaccines]);
 
   return (
-    <div className="flex flex-col animate-fade-in pb-10">
-      {/* Profil Görseli */}
-      <div className="relative h-64 w-full overflow-hidden rounded-b-[2.5rem] shadow-lg">
+    <div className="flex flex-col animate-fade-in pb-24">
+      <div className="relative h-72 w-full overflow-hidden rounded-b-[3rem] shadow-xl">
         <Image 
           src={lamb.photoUrl} 
           alt={lamb.name} 
           fill 
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         <Button 
           variant="ghost" 
           size="icon" 
           onClick={onBack}
-          className="absolute top-4 left-4 bg-white/20 backdrop-blur-md text-white rounded-full hover:bg-white/40"
+          className="absolute top-6 left-6 bg-white/30 backdrop-blur-md text-white rounded-full hover:bg-white/50 h-12 w-12"
         >
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="h-8 w-8" />
         </Button>
-        <div className="absolute bottom-6 left-6 right-6">
-          <Badge className="mb-2 bg-primary text-white border-none">#{lamb.id}</Badge>
-          <h1 className="text-3xl font-black text-white">{lamb.name}</h1>
+        <div className="absolute bottom-8 left-8 right-8">
+          <Badge className="mb-3 bg-primary text-white border-none px-3 py-1 font-black">#{lamb.id}</Badge>
+          <h1 className="text-4xl font-black text-white">{lamb.name}</h1>
         </div>
       </div>
 
-      <div className="px-6 -mt-6 relative z-10 space-y-6">
-        {/* Temel Bilgiler Kartı */}
-        <Card className="border-none shadow-xl rounded-[2rem] bg-white">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Doğum Tarihi</span>
-                <div className="flex items-center gap-2 text-slate-700 font-bold">
-                  <Calendar className="h-4 w-4 text-primary" />
-                  <span className="text-sm">{format(new Date(lamb.birthDate), 'dd MMM yyyy', { locale: tr })}</span>
+      <div className="px-6 -mt-8 relative z-10 space-y-6">
+        <Card className="border-none shadow-xl rounded-[2.5rem] bg-white">
+          <CardContent className="p-8">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Doğum Tarihi</span>
+                <div className="flex items-center gap-2.5 text-slate-700 font-bold">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  <span className="text-base">{format(new Date(lamb.birthDate), 'dd MMM yyyy', { locale: tr })}</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Yaş</span>
-                <div className="flex items-center gap-2 text-slate-700 font-bold">
-                  <Clock className="h-4 w-4 text-primary" />
-                  <span className="text-sm">{ageInDays} Günlük</span>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Yaş</span>
+                <div className="flex items-center gap-2.5 text-slate-700 font-bold">
+                  <Clock className="h-5 w-5 text-primary" />
+                  <span className="text-base">{ageInDays} Günlük</span>
                 </div>
               </div>
             </div>
             
-            <div className="mt-6 pt-6 border-t border-slate-100">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-bold text-slate-500">Aşılanma Oranı</span>
-                <span className="text-xs font-black text-primary">%{progress}</span>
+            <div className="mt-8 pt-6 border-t border-slate-100">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-sm font-black text-slate-500">Aşılanma Oranı</span>
+                <span className="text-sm font-black text-primary">%{progress}</span>
               </div>
-              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-primary transition-all duration-500" 
+                  className="h-full bg-primary shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all duration-700" 
                   style={{ width: `${progress}%` }} 
                 />
               </div>
@@ -111,65 +109,64 @@ export function LambProfile({ lamb, onBack, onUpdateVaccine }: LambProfileProps)
           </CardContent>
         </Card>
 
-        {/* Aşı Takvimi */}
         <div className="space-y-4">
-          <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-            <Syringe className="h-5 w-5 text-primary" /> Aşı Takvimi
+          <h2 className="text-xl font-black text-slate-800 flex items-center gap-3 ml-2">
+            <Syringe className="h-6 w-6 text-primary" /> Aşı Takvimi
           </h2>
           
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             {lamb.vaccines.map((vaccine) => (
               <div 
                 key={vaccine.id}
                 onClick={() => onUpdateVaccine(vaccine.id)}
-                className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${
+                className={`flex items-center justify-between p-5 rounded-[2rem] border-2 transition-all cursor-pointer ${
                   vaccine.isCompleted 
                   ? 'bg-emerald-50 border-emerald-100 text-emerald-900' 
                   : 'bg-white border-slate-100 shadow-sm'
                 }`}
               >
-                <div className="flex items-center gap-4">
-                  <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
+                <div className="flex items-center gap-5">
+                  <div className={`h-12 w-12 rounded-2xl flex items-center justify-center ${
                     vaccine.isCompleted ? 'bg-emerald-100' : 'bg-slate-100'
                   }`}>
-                    <Syringe className={`h-5 w-5 ${vaccine.isCompleted ? 'text-emerald-600' : 'text-slate-400'}`} />
+                    <Syringe className={`h-6 w-6 ${vaccine.isCompleted ? 'text-emerald-600' : 'text-slate-400'}`} />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold">{vaccine.name}</h4>
-                    <p className="text-[10px] font-medium text-slate-400">
-                      Tarih: {format(new Date(vaccine.dueDate), 'dd MMMM yyyy', { locale: tr })}
+                    <h4 className="text-base font-black">{vaccine.name}</h4>
+                    <p className="text-[11px] font-bold text-slate-400 mt-0.5">
+                      {format(new Date(vaccine.dueDate), 'dd MMMM yyyy', { locale: tr })}
                     </p>
                   </div>
                 </div>
                 {vaccine.isCompleted ? (
-                  <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+                  <CheckCircle2 className="h-8 w-8 text-emerald-500" />
                 ) : (
-                  <Circle className="h-6 w-6 text-slate-200" />
+                  <Circle className="h-8 w-8 text-slate-200" />
                 )}
               </div>
             ))}
           </div>
         </div>
 
-        {/* AI Sağlık Önerileri */}
         <div className="space-y-4">
-          <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-amber-500" /> AI Sağlık Önerileri
+          <h2 className="text-xl font-black text-slate-800 flex items-center gap-3 ml-2">
+            <Sparkles className="h-6 w-6 text-amber-500" /> AI Sağlık Önerileri
           </h2>
-          <Card className="border-none shadow-sm rounded-[2rem] bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100/50">
-            <CardContent className="p-5">
+          <Card className="border-none shadow-lg rounded-[2.5rem] bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100/50">
+            <CardContent className="p-7">
               {isAiLoading ? (
-                <div className="flex items-center justify-center py-4 gap-3">
-                  <Loader2 className="h-5 w-5 text-amber-500 animate-spin" />
-                  <p className="text-xs font-bold text-amber-700 uppercase tracking-wider">Öneriler Hazırlanıyor...</p>
+                <div className="flex items-center justify-center py-6 gap-4">
+                  <Loader2 className="h-6 w-6 text-amber-500 animate-spin" />
+                  <p className="text-sm font-black text-amber-700 uppercase tracking-widest">Öneriler Hazırlanıyor...</p>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  <p className="text-sm text-amber-900 leading-relaxed font-medium italic">
-                    "{aiAdvice || 'Kuzunuzun aşı durumuna göre size özel tavsiyeler burada görünecek.'}"
+                <div className="space-y-3">
+                  <p className="text-base text-amber-950 leading-relaxed font-bold italic">
+                    "{aiAdvice || 'Kuzunuzun durumuna göre özel tavsiyeler hazırlanıyor.'}"
                   </p>
-                  <p className="text-[9px] text-amber-600 font-bold uppercase tracking-tighter opacity-60">
-                    * Bu öneriler bilgilendirme amaçlıdır, veteriner hekiminize danışın.
+                  <div className="h-px bg-amber-200/50 w-full" />
+                  <p className="text-[10px] text-amber-600 font-black uppercase tracking-tight opacity-70">
+                    * Bilgilendirme amaçlıdır, veterinere danışın.
                   </p>
                 </div>
               )}

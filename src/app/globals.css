@@ -39,13 +39,12 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-body antialiased text-base;
     overscroll-behavior-y: none;
     overflow-x: hidden;
     position: relative;
   }
 
-  /* Arka plan koyun görseli - İnsan olmayan saf koyun görseli ile güncellendi */
   body::before {
     content: "";
     position: fixed;
@@ -56,15 +55,13 @@
     background-image: url('https://picsum.photos/seed/sheep-pasture/1200/800');
     background-size: cover;
     background-position: center;
-    opacity: 0.16; /* Görünürlük daha belirgin yapıldı */
+    opacity: 0.28; /* Görünürlük belirgin şekilde artırıldı */
     z-index: -1;
     pointer-events: none;
   }
 }
 
-/* 
-   KESİN ÇÖZÜM: Tüm Next.js ve Turbopack Geliştirici Arayüzlerini (N simgesi dahil) Gizle 
-*/
+/* Tüm geliştirici arayüzlerini gizle */
 [data-turbopack-overlay],
 [data-nextjs-toast-wrapper],
 #nextjs-dev-overlay,
@@ -98,7 +95,6 @@ div[id*="Nextjs"] {
   animation: fade-in 0.3s ease-out forwards;
 }
 
-/* Scroll bar gizle */
 ::-webkit-scrollbar {
   display: none;
 }
