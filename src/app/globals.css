@@ -45,17 +45,25 @@
   }
 }
 
-/* Tüm Geliştirici İkonlarını ve Next.js Dev Overlay'lerini KESİN OLARAK Gizle */
+/* 
+   KESİN ÇÖZÜM: Tüm Next.js ve Turbopack Geliştirici Arayüzlerini Gizle 
+   Bu kurallar "N" ikonu dahil tüm dev overlay'leri yok eder.
+*/
 [data-turbopack-overlay],
+[data-nextjs-toast-wrapper],
 #nextjs-dev-overlay,
 #__next-build-watcher,
-[data-nextjs-toast-wrapper],
-#nextjs-error-feedback-overlay {
+#nextjs-error-feedback-overlay,
+nextjs-portal,
+[data-nextjs-dev-overlay] {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  z-index: -9999 !important;
+  z-index: -999999 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
 @keyframes fade-in {
